@@ -11,15 +11,11 @@
         {% endfor %}
     {% endif %}
 
-<br>
+<h1 class="titulo">Escolha um Paciente <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
 
+    <strong>    🧾 Novo Paciente </strong>
+</button></h1>
 
-
-<h1 class="titulo">Escolha um Paciente</h1>
-
-<button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
-    🧾 Novo Paciente
-</button>
 
 <div class="row">
     {% for paciente in pacientes %}
@@ -38,15 +34,42 @@
                     <p class="dados">{{paciente.cpf}}</p>
                    <p class="dados">{{paciente.datanascimento}}</p>
                     <p class="dados"> <span id="dataNascimento" hidden >{{ paciente.datanascimento|date:"y-m-d" }}</span></p>
-                    <p class="dados">Idade: <span id="idade"></span> anos</p>
+                    
 
-                    <p class="dados">{{paciente.email}}</p>
-                    <p class="dados">{{paciente.estadocivil}}</p>
-                    <p class="dados">{{paciente.sexo}}</p>
-                    <p class="dados">{{paciente.telefone}}</p>
-                    <p class="dados">{{paciente.naturalidade}}</p>
-                    <p class="dados">{{paciente.profissao}}</p>
-                    <p class="dados">{{paciente.endereco}}</p>
+                    <div class="paciente">
+                        <p class="dados">
+                            <span class="dataNascimento" hidden>{{ paciente.datanascimento|date:"Y-m-d" }}</span>
+                        </p>
+                        <p class="dados"> <span class="idade"></span> anos</p>
+                        
+                    </div>
+
+                    <script>
+                        document.addEventListener('DOMContentLoaded', function() {
+                            // Seleciona todos os blocos de pacientes
+                            const pacientes = document.querySelectorAll('.paciente');
+                            
+                            pacientes.forEach(paciente => {
+                                const dataNascStr = paciente.querySelector('.dataNascimento').textContent;
+                                const dataNasc = new Date(dataNascStr);
+                                const hoje = new Date();
+                                
+                                let idade = hoje.getFullYear() - dataNasc.getFullYear();
+                                const mesAtual = hoje.getMonth();
+                                const mesNasc = dataNasc.getMonth();
+                                
+                                // Ajuste se ainda não fez aniversário este ano
+                                if (mesNasc > mesAtual || 
+                                    (mesNasc === mesAtual && hoje.getDate() < dataNasc.getDate())) {
+                                    idade--;
+                                }
+                                
+                                // Insere a idade no campo correto
+                                paciente.querySelector('.idade').textContent = idade;
+                            });
+                        });
+                    </script>
+
 
                     <a href="{% url 'editar_paciente' paciente.pk %}" class="link-hover">
                         <button type="button" class="btn btn-primary">
@@ -54,10 +77,11 @@
                         </button>
                     </a>
                 </div>
+                <br>
                 
         </div>
         
-        
+      
     {% endfor %}
 
 

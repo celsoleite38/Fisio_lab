@@ -13,6 +13,7 @@ from hashlib import sha256
 from django.contrib.auth.decorators import login_required
 from .forms import PerfilProfissionalForm
 
+#from django.core.mail import send_mail
 
 def cadastro(request):
     if request.method == "GET":
@@ -39,8 +40,9 @@ def cadastro(request):
             ativacao.save()
             
             path_template = os.path.join(settings.BASE_DIR, 'autenticacao/templates/emails/cadastro_confirmado.html')
-            email_html(path_template, 'Cadastro confirmado', [email,], username=username, link_ativacao=f"127.0.0.1:8000/auth/ativar_conta/{token}")
-            messages.add_message(request, constants.SUCCESS, ' USUARIO CADASTRADO COM SUCESSO')
+            email_html(path_template, 'Cadastro confirmado', [email,], username=username, link_ativacao=f"http://127.0.0.1:8000/auth/ativar_conta/{token}")
+            messages.add_message(request, constants.SUCCESS, ' USUARIO CADASTRADO! ')
+            messages.add_message(request, constants.SUCCESS, ' VERIFIQUE SEU EMAIL PARA CONFIRMAR SEU CADASTRO')
             return redirect('/auth/logar')
         except:
             messages.add_message(request, constants.ERROR, ' erro interno do sistema!!')
@@ -99,3 +101,5 @@ def editar_perfil_profissional(request):
         form = PerfilProfissionalForm(instance=perfil)
 
     return render(request, 'editar_perfil_profissional.html', {'form': form})
+
+

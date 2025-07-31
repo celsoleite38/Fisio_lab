@@ -1,0 +1,138 @@
+{% extends 'base_plataforma.html' %}
+{% load static %}
+
+{% block 'head' %}
+    {{ block.super }}
+    <!-- FullCalendar CSS -->
+    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.css' rel='stylesheet' />
+    <!-- Bootstrap 5.3.2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        #calendar {
+            margin: 40px auto;
+            max-width: 1100px;
+            padding: 0 20px;
+            height: 600px;
+        }
+        .fc-event {
+            cursor: pointer;
+            font-size: 0.9em;
+            padding: 2px 4px;
+        }
+
+        .toast {
+            min-width: 300px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.3);
+        }
+        .toast-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 1rem;
+        }
+
+        .toast .btn-close {
+            filter: invert(1); /* deixa o ícone branco mesmo fora do Bootstrap */
+            margin-left: auto;
+            margin-right: -0.25rem;
+        }
+    </style>
+{% endblock %}
+
+{% block 'plataforma' %}
+<div class="container-fluid mt-4">
+    <div class="row mb-4 px-4">
+        <div class="col-6 text-left">
+            <a href="{% url 'agenda:novo_agendamento' %}" class="btn btn-outline-success"><strong>Novo Agendamento</strong></a>
+        </div>
+        <div class="col-6 text-end">
+            <div class="text-right mb-4">
+                <button id="btnRelatorio" class="btn btn-outline-success">Confirmados/Cancelados</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="calendar"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block 'body' %}
+<!-- Toast flutuante -->
+<div class="position-fixed bottom-0 end-0 p-3" style="z-index: 2000;">
+    <div id="relatorioToast" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="toast-header bg-success text-white">
+            <strong class="me-auto">Confirmados e Cancelados</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="X"></button>
+        </div>
+        <div class="toast-body" id="conteudoRelatorio">
+            Carregando...
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap JS (essencial para Toast funcionar) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Toast JS -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.getElementById('btnRelatorio');
+    const toastEl = document.getElementById('relatorioToast');
+    const toast = new bootstrap.Toast(toastEl, { autohide: false });
+    const conteudo = document.getElementById('conteudoRelatorio');
+
+    btn.addEventListener('click', function () {
+        conteudo.innerHTML = "Carregando relatório...";
+        toast.show();
+
+        fetch("{% url 'agenda:relatorio_parcial' %}")
+            .then(response => response.json())
+            .then(data => {
+                conteudo.innerHTML = data.html;
+            })
+            .catch(() => {
+                conteudo.innerHTML = "Erro ao carregar o relatório.";
+            });
+    });
+});
+</script>
+
+{{ block.super }}
+
+<!-- FullCalendar JS -->
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.min.js'></script>
+<script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/locales/pt-br.js'></script>
+
+<!-- FullCalendar Init -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log("Iniciando calendário...");
+
+    var calendarEl = document.getElementById('calendar');
+    if (!calendarEl) {
+        console.error("Elemento #calendar não encontrado!");
+        return;
+    }
+
+    var calendar = new FullCalendar.Calendar(calendarEl, {
+        locale: 'pt-br',
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: "{% url 'agenda:consultas_json' %}",
+        eventClick: function(info) {
+            window.location.href = `/agenda/consulta/${info.event.id}/`;
+        }
+    });
+
+    calendar.render();
+    console.log("Calendário renderizado!");
+});
+</script>
+{% endblock %}

@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block 'head' %}
-    <link rel="stylesheet" href="{% static 'plataforma/css/css.css' %}">
+    
     <link rel="stylesheet" href="{% static 'plataforma/css/plano_evolucao.css' %}">
+    <link rel="stylesheet" href="{% static 'plataforma/css/css.css' %}">
 {% endblock %}
 
 {% block 'body' %}
@@ -11,45 +12,51 @@
         <div class="row">
             <div class="col-md-2">
                 <br>
-                <a href="{% url 'editar_perfil' %}" class="link-lateral">
+                
+                <a href="{% url 'agenda:calendario' %}" style="width: 100%" class="link-lateral">
                     <div class="card-lateral">
-                    Editar Profissional
+                        <img src="{% static 'plataforma/img/calendarwsf.png' %}">
+                        <h3>Agenda</h3>
                     </div>
                 </a>
+                <br>
                 <a href="{% url 'pacientes' %}" class="link-lateral">
                     <div class="card-lateral">
                         <img src="{% static 'plataforma/img/paciente.png' %}">
-                        <br>
-                        <br>
                         <h3>Gerenciar Pacientes</h3>
                     </div>
                 </a>
+                <br>
                 <a href="{% url 'dados_paciente_listar' %}" class="link-lateral">
                     <div class="card-lateral">
                         <img src="{% static 'plataforma/img/dados_paciente.png' %}">
-                        <br>
-                        <br>
                         <h3>Dados do Pacientes</h3>
                     </div>
                 </a>
+                <br>
                 <a href="{% url 'plano_evolucao_listar' %}" style="width: 100%" class="link-lateral">
                     <div class="card-lateral">
                         <img src="{% static 'plataforma/img/plano_alimentar.png' %}">
-                        <br>
-                        <br>
                         <h3>Evolução</h3>
                     </div>
                 </a>
-                <a href="{% url 'sair'%}" class="link-lateral">
-                    <div class="card-lateral">
-                        <img src="{% static 'plataforma/img/sair.png' %}">
-                        <br>
-                        <br>
-                        <h3>Sair</h3>
-                    </div>
-                </a>
+                
             </div>
             <div class="col-md-8">
+                {% if avisos_nao_lidos %}
+                    <div class="container mt-3">
+                        <div class="alert alert-info shadow-sm">
+                        <ul class="mb-0">
+                            {% for aviso_usuario in avisos_nao_lidos %}
+                            <li class="mb-2">
+                                <strong>{{ aviso_usuario.aviso.titulo }}</strong> — {{ aviso_usuario.aviso.mensagem }}
+                                <a href="{% url 'marcar_aviso_lido' aviso_usuario.pk %}" class="btn btn-warning btn-primary ms-2">Marcar como lido</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                        </div>
+                    </div>
+                    {% endif %}
                 {% block 'plataforma' %}
                 
                 {% endblock %}

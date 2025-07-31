@@ -1,24 +1,25 @@
 .card-lateral{
 
-    background-color: #27DB8F;
-    margin-top: 20px;
-    padding: 10px;
-    color: #EAEAEA;
-    font-weight: bold;
-    text-decoration: none;
-    text-align: center;
-    box-shadow: 5px 5px 5px gray;
+    background-image: linear-gradient(to right, #4cc099, #0babf5); /* Degradê azul */
+        color: white; /* Cor do texto */
+        border-radius: 10px; /* Borda arredondada */
+        padding: 20px;
+        text-align: center;
+        transition: transform 0.9s, box-shadow 0.9s;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 .link-lateral:hover{
     text-decoration: none;
+    box-shadow: 0 6px 12px #F59E0B;
 
 }
 .titulo{
-    color: #27DB8F;
+    color: #4cc099;
 
 } 
 .card-paciente{
     background-color:rgb(234, 234, 234);
+    border-radius: 10px;
     width: 80%;
     box-shadow: 3px 3px 3px gray;
     padding: 20px;
@@ -40,7 +41,7 @@
 
 @media (max-width: 1300px)
 
-@media print {
+    @media print {
     .btn { display: none; } /* Ocultar botões na impressão */
 }
 
@@ -58,4 +59,18 @@
 
 .assinatura {
     text-align: center; /* Centraliza o texto dentro da assinatura */
+}
+
+.btn-outline-success {
+    padding: 8px 16px;
+    border: 2px solid #28a745; /* Verde do Bootstrap */
+    border-radius: 4px;
+    color: #28a745;
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+.btn-outline-success:hover {
+    background-color: #28a745;
+    color: white;
 }

@@ -7,9 +7,9 @@
     @media print {
         @page {
             size: A4;
-            margin: 2cm;
+            margin: 0.5cm;
         }
-        .d-print-none {
+        .no-print {
             display: none !important;
         }
     }
@@ -56,7 +56,7 @@
 {% if perfil %}
     <div class="mb-3">
          <div>
-            <strong>Nutricionista:</strong> {{ perfil.nome_completo }}<br>
+            <strong>Fisioterapeuta:</strong> {{ perfil.nome_completo }}<br>
             <strong>CPF:</strong> {{ perfil.cpf }}<br>
             <strong>Crefito:</strong> {{ perfil.crefito }}
         </div>
@@ -67,12 +67,10 @@
     {% endif %}
 {% endif %}
 </div>
-<button class="btn btn-success" onclick="window.print()">
+<button class="btn btn-success no-print" onclick="window.print()">
     🖨️ Imprimir
 </button>
-<a button  href="{% url 'imprimir_dados_paciente' paciente.id %}" class="btn btn-primary">
-    Gerar PDF 
-</button></a>
+<br>
 <h2>Dados do Paciente</h2> 
 <div class="text-end mb-3">
     
@@ -138,3 +136,5 @@
     </div>
 </div>
 {% endblock %}
+
+

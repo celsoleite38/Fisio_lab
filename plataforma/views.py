@@ -1,4 +1,5 @@
 from collections import defaultdict
+from tkinter import Canvas
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -9,7 +10,8 @@ from autenticacao.models import PerfilProfissional
 from .models import Pacientes, DadosPaciente, Evolucao
 from datetime import date, datetime
 from .forms import PacienteForm, EvolucaoForm
-from reportlab.pdfgen import canvas # type: ignore
+from reportlab.pdfgen import canvas
+from django.views.decorators.http import require_GET
 
 @login_required(login_url='/auth/logar/')
 def pacientes (request):
@@ -86,13 +88,13 @@ def dados_paciente(request, id):
         exames_complementares = request.POST.get('exames_complementares')
         diagnostico = request.POST.get('diagnostico')
         plano_terapeutico = request.POST.get('plano_terapeutico')
-        
+        data_dadospaciente = request.POST.get('data_dadospaciente') or datetime.date.today()
         if (len(peso.strip()) == 0) or (len(qp.strip()) == 0) or (len(hma.strip()) == 0) or (len(hpp.strip()) == 0) or (len(antecedentepf.strip()) == 0) or (len(exame_fisico.strip()) == 0) or (len(exames_complementares.strip()) == 0) or (len(diagnostico.strip()) == 0) or (len(plano_terapeutico.strip()) == 0):
             messages.add_message(request, constants.ERROR, 'Preencha todos os campos, use 0 ou - quando nao houver valor!')
             return redirect('/dados_paciente/')
         
         paciente = DadosPaciente(paciente=paciente,
-                                data=datetime.now(),
+                                #data=datetime.now(),
                                 peso=peso,
                                 qp=qp,
                                 hma=hma,
@@ -101,7 +103,8 @@ def dados_paciente(request, id):
                                 exame_fisico=exame_fisico,  
                                 exames_complementares=exames_complementares,
                                 diagnostico=diagnostico,
-                                plano_terapeutico=plano_terapeutico)                        
+                                plano_terapeutico=plano_terapeutico,
+                                data_dadospaciente=data_dadospaciente)                        
         paciente.save()
         
         messages.add_message(request, constants.SUCCESS, 'Dados cadastrado com sucesso')
@@ -166,7 +169,7 @@ def plano_evolucao(request, id):
 
     evolucoes_por_data = defaultdict(list)
     for evolucao in evolucoes:
-        evolucoes_por_data[evolucao.data_criacao.date()].append(evolucao)
+        evolucoes_por_data[evolucao.data_criacao].append(evolucao)
     
     
 
@@ -180,7 +183,7 @@ def plano_evolucao(request, id):
 
 @login_required(login_url='/auth/logar/')
 def evolucao(request, id):  #id_paciente
-    paciente = get_object_or_404(Pacientes, id=id) #id=id
+    paciente = get_object_or_404(Pacientes, id=id) 
     if not paciente.fisio == request.user:
         messages.add_message(request, constants.ERROR, 'Esse paciente não é seu')
         return redirect('/dados_evolucao/')
@@ -189,15 +192,18 @@ def evolucao(request, id):  #id_paciente
     if request.method == "POST":
         titulo = request.POST.get('titulo')
         evolucao = request.POST.get ('evolucao')
-        
+        data_criacao = request.POST.get('data_criacao') or datetime.date.today() #data_criacao = data_criacao or datetime.date.today()  # define a data padrão se não for fornecida
         if (len(titulo.strip()) == 0) or (len(evolucao.strip()) == 0):
             messages.add_message(request, constants.ERROR, 'Preencha todos os campos, use 0 ou - quando nao houver valor!')
-            
+
+        
+        
+       
         
         r1 = Evolucao(paciente=paciente,
                     titulo=titulo,
                     evolucao=evolucao,
-                    data_criacao=datetime.now())
+                    data_criacao=datetime.strptime(data_criacao, '%Y-%m-%d').date())
                     
         r1.save()
         
@@ -266,6 +272,7 @@ def imprimir_evolucoes(request, paciente_id):
 @login_required(login_url='/auth/logar/')
 def imprimir_dados_paciente(request, id):
     paciente = get_object_or_404(Pacientes, id=id)
+    
     dados_paciente = DadosPaciente.objects.filter(paciente=paciente)
     if not paciente.fisio == request.user:
         messages.add_message(request, constants.ERROR, 'Acesso negado a este PACIENTE. ')
@@ -279,3 +286,4 @@ def imprimir_dados_paciente(request, id):
             'dados_paciente': dados_paciente,
             'today': date.today()
         })
+

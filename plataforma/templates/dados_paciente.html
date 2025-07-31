@@ -19,7 +19,7 @@
             {% endif %}
         </div>  
         
-        <div class="col-md-3 dados descricao">
+        <div class="col-md-7 dados descricao">
             <h4>{{paciente.nome}}</h4>
             <h6>{{paciente.datanascimento}}</h6>
         </div>
@@ -27,19 +27,19 @@
     </div>
 
     <hr>
-
+    
     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
-
+        
         🧾 Adicionar dados do paciente
 
     </button>
-    <strong>
-    <button class="btn btn-outline-success" onclick="window.location.href='{% url 'imprimir_dados_paciente' paciente.id %}'">
-        
+    
+    <!--<button class="btn btn-outline-success" onclick="window.location.href='{% url 'imprimir_dados_paciente' paciente.id %}'">-->
+    <a href="{% url 'imprimir_dados_paciente' paciente.id %}" class="btn btn-outline-success"> 
         🖨️ Imprimir Dados do Paciente
+    </a>
         
-    </strong>
-    </button>
+    
     <br>
 
     <br>
@@ -68,7 +68,7 @@
         <tbody>
             {% for dado in dados_paciente %}
                 <tr>
-                    <th scope="row">{{dado.data|date:"d/m/Y"}}</th>
+                    <th scope="row">{{dado.data_dadospaciente|date:"d/m/Y"}}</th>
 
                     <th>{{dado.peso}}Kg</th>
 
@@ -107,8 +107,8 @@
         <tbody>
             {% for dado in dados_paciente %}
                 <tr>
-                    <th scope="row">{{dado.data|date:"d/m/Y"}}</th>
-
+                    <th scope="row">{{dado.data_dadospaciente|date:"d/m/Y"}}</th>
+                    
                     <td> {{dado.exame_fisico}}  </td>
 
                     <td> {{dado.exames_complementares}} </td>
@@ -282,6 +282,15 @@
                             </div>
         
                         </div>
+                        <br>
+                            <label for="validationServerUsername">Data</label>
+
+                            <div class="input-group">
+
+                                <input type="date" class="date" placeholder="" name="data_dadospaciente">
+
+                            </div>
+                            <br>
         
                         <br>
         

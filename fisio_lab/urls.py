@@ -8,7 +8,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('autenticacao.urls')),
     path('', include('plataforma.urls')),
-    
+    path('agenda/', include('agenda.urls',namespace='agenda')),
+    path('notificacoes/', include('notificacoes.urls')),
+    path('', include('paginas_vendas.urls')),  # Página principal como página de vendas
 ]
 
 if settings.DEBUG:

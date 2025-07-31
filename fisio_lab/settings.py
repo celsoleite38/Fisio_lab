@@ -40,6 +40,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'autenticacao',
     'plataforma',
+    'agenda',
+    'notificacoes',
+    'paginas_vendas'
     
 ]
 
@@ -67,6 +70,7 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'autenticacao.context_processors.perfil_profissional',
+                'notificacoes.context_processors.avisos_nao_lidos',
             ],
         },
     },
@@ -147,11 +151,14 @@ MESSAGE_TAGS = {
 }
 
 #email
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST_USER = 'josecelsoleite@gmail.com'
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'  # ou smtp.gmail.com, etc.
+
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_PASSWORD = 'Etpv$910tbr!'
-DEFAULT_FROM_EMAIL = 'Fisio-Minas <noreply@seudominio.com>'
+EMAIL_HOST_USER = 'josecelsoleite@gmail.com'
+EMAIL_HOST_PASSWORD = 'qutc nfnu jgyc ivjf'
+DEFAULT_FROM_EMAIL = 'Fisio-Minas <noreply@fisiominas.com.br>'
+EMAIL_FAIL_SILENTLY = False

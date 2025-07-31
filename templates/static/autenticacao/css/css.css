@@ -1,17 +1,15 @@
 .sidebar{
-    background-color:rgb(178, 233, 221);
+    background-image: url('"/static/autenticacao/img/logo fisiominas-.png"'), linear-gradient(to bottom, #4cc099, #0babf5) ;
     height: 100vh;
+    color: rgb(36, 28, 28);
 } 
 .logo_sidebar{
     text-align: center;
-} 
-.img_logo_sidebar{
-    margin-top: 8%;
-    width: 100%;
-} 
-.sidebar{
-    background-image: url("/static/autenticacao/img/logo fisiominas-.png");
 }
+.img_logo_sidebar{
+    width: 100%;
+}
+
 .area_cadastrar{
     margin-top: 8%;
     margin-left: 15%;
@@ -19,16 +17,16 @@
 }
 .titulo{
     font-weight: bold;
-} 
+}
 .sub-titulo{
-    color: gray;
+    color: rgb(241, 234, 234);
 }
 .input-form{
     margin-top: 15px;
     width: 100%;
     padding: 5px;
     outline: 0;
-} 
+}
 .input-form:focus{
     border: 2px solid #27DB8F !important;
     outline: 0 !important;
@@ -38,15 +36,12 @@
     font-weight: bold;
 }
 .btn-first{
-
-    border: none;
-    padding: 5px 15px 5px 15px;
+    border: 2px solid #10B981;
+    border-radius: 5px;
+    padding: 10px 20px;
     font-size: 25px;
-    background-color: #27DB8F;
+    background-color: #10B981;
     color: white;
     font-weight: bold;
 }
-.body {
-    max-width: 100%;
-    overflow-x: hidden;
-}
+    
