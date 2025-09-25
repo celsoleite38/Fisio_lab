@@ -10,7 +10,7 @@ from autenticacao.models import PerfilProfissional
 from .models import Pacientes, DadosPaciente, Evolucao
 from datetime import date, datetime
 from .forms import PacienteForm, EvolucaoForm
-from reportlab.pdfgen import canvas
+#from reportlab.pdfgen import canvas
 from django.views.decorators.http import require_GET
 
 @login_required(login_url='/auth/logar/')

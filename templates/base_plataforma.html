@@ -2,15 +2,50 @@
 {% load static %}
 
 {% block 'head' %}
-    
     <link rel="stylesheet" href="{% static 'plataforma/css/plano_evolucao.css' %}">
     <link rel="stylesheet" href="{% static 'plataforma/css/css.css' %}">
+    <style>
+        /* Estilos responsivos específicos para tablets */
+        @media (max-width: 1024px) {
+            .col-md-2 {
+                width: 100%;
+                order: 2;
+            }
+            
+            .col-md-8 {
+                width: 100%;
+                order: 1;
+            }
+            
+            .navbar-brand {
+                font-size: 14px;
+            }
+            
+            .navbar-brand font {
+                font-size: 14px !important;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .container-fluid {
+                padding: 0 10px;
+            }
+            
+            .navbar-brand {
+                max-width: 200px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block 'body' %}
     <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-2">
+        <div class="row flex-column flex-md-row">
+            <!-- Sidebar - Tablets: vai para baixo -->
+            <div class="col-12 col-md-2 col-lg-2 order-2 order-md-1">
                 <br>
                 
                 <a href="{% url 'agenda:calendario' %}" style="width: 100%" class="link-lateral">
@@ -40,9 +75,10 @@
                         <h3>Evolução</h3>
                     </div>
                 </a>
-                
             </div>
-            <div class="col-md-8">
+            
+            <!-- Conteúdo principal - Tablets: vai para cima -->
+            <div class="col-12 col-md-10 col-lg-8 order-1 order-md-2">
                 {% if avisos_nao_lidos %}
                     <div class="container mt-3">
                         <div class="alert alert-info shadow-sm">
@@ -56,11 +92,10 @@
                         </ul>
                         </div>
                     </div>
-                    {% endif %}
+                {% endif %}
                 {% block 'plataforma' %}
-                
                 {% endblock %}
             </div>
         </div>
     </div>
-{% endblock%}
+{% endblock %}

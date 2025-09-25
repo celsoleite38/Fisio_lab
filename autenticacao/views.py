@@ -46,7 +46,6 @@ def cadastro(request):
             return redirect('/auth/logar')
         except:
             messages.add_message(request, constants.ERROR, ' erro interno do sistema!!')
-    
             return redirect('/auth/cadastro')
 
 def logar(request):

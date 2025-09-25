@@ -1,48 +1,138 @@
 .card-lateral{
-
-    background-image: linear-gradient(to right, #4cc099, #0babf5); /* Degradê azul */
-        color: white; /* Cor do texto */
-        border-radius: 10px; /* Borda arredondada */
-        padding: 20px;
-        text-align: center;
-        transition: transform 0.9s, box-shadow 0.9s;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-image: linear-gradient(to right, #4cc099, #0babf5);
+    color: white;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 15px;
 }
+
 .link-lateral:hover{
     text-decoration: none;
     box-shadow: 0 6px 12px #F59E0B;
-
+    transform: scale(1.05);
 }
+
 .titulo{
     color: #4cc099;
-
 } 
+
 .card-paciente{
-    background-color:rgb(234, 234, 234);
+    background-color: rgb(234, 234, 234);
     border-radius: 10px;
     width: 80%;
     box-shadow: 3px 3px 3px gray;
     padding: 20px;
     color: black;
-
 }
+
 .link-hover:hover{
     text-decoration: none;
 }
+
 .foto-perfil{
-        text-align: center;
+    text-align: center;
 } 
+
 .dados{
     font-weight: bold;
 }
+
 .descricao{
     margin-left: -12%;
 } 
 
-@media (max-width: 1300px)
+/* RESPONSIVIDADE PARA TABLETS */
+@media (max-width: 1024px) {
+    .card-lateral {
+        padding: 15px;
+        margin-bottom: 10px;
+    }
+    
+    .card-lateral h3 {
+        font-size: 14px;
+        margin: 5px 0;
+    }
+    
+    .card-paciente {
+        width: 95%;
+        padding: 15px;
+    }
+    
+    .descricao {
+        margin-left: 0;
+    }
+    
+    /* Layout para menu lateral em tablets */
+    .row.flex-column-flex-md-row {
+        flex-direction: column;
+    }
+    
+    .col-md-2 {
+        width: 100% !important;
+        order: 2;
+    }
+    
+    .col-md-8, .col-md-10 {
+        width: 100% !important;
+        order: 1;
+    }
+}
 
-    @media print {
-    .btn { display: none; } /* Ocultar botões na impressão */
+@media (max-width: 768px) {
+    .card-lateral {
+        padding: 12px;
+        display: inline-block;
+        width: 48%;
+        margin: 1%;
+        vertical-align: top;
+        min-height: 120px;
+    }
+    
+    .card-lateral h3 {
+        font-size: 12px;
+    }
+    
+    .card-paciente {
+        width: 100%;
+        padding: 10px;
+    }
+    
+    .navbar-brand {
+        font-size: 14px;
+        max-width: 200px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    .navbar-brand font {
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .card-lateral {
+        width: 100%;
+        margin: 5px 0;
+    }
+    
+    .card-lateral h3 {
+        font-size: 14px;
+    }
+}
+
+/* Estilos para impressão */
+@media print {
+    .btn { 
+        display: none; 
+    }
+    
+    .card-lateral {
+        display: none;
+    }
 }
 
 .body {
@@ -54,16 +144,16 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh; /* Ajusta a altura para ocupar toda a tela */
+    height: 100vh;
 }
 
 .assinatura {
-    text-align: center; /* Centraliza o texto dentro da assinatura */
+    text-align: center;
 }
 
 .btn-outline-success {
     padding: 8px 16px;
-    border: 2px solid #28a745; /* Verde do Bootstrap */
+    border: 2px solid #28a745;
     border-radius: 4px;
     color: #28a745;
     background-color: transparent;
@@ -73,4 +163,15 @@
 .btn-outline-success:hover {
     background-color: #28a745;
     color: white;
+}
+
+/* Correção para a media query que estava incompleta */
+@media (max-width: 1300px) {
+    .card-paciente {
+        width: 90%;
+    }
+    
+    .descricao {
+        margin-left: -8%;
+    }
 }
