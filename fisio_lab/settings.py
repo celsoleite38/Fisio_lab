@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-x+)qu%0yl70^8$_ovlc&61-3#@84*3mb-ffc--5+zbpufvz2&$
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['innosoft.com.br', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['fisio.innosoft.com.br', 'localhost', '127.0.0.1']
 
 
 # Application definition
