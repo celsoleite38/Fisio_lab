@@ -1,8 +1,0 @@
-# Arquivos do Django
-*.pyc
-__pycache__/
-db.sqlite3  # Evita subir o banco de dados local
-
-# Virtualenv
-venv/
-.env  # Evita subir credenciais e configurações secretas
