@@ -32,13 +32,13 @@ def pacientes (request):
         
         if (len(nome.strip()) == 0) or (len(sexo.strip()) == 0) or (len(cpf.strip()) == 0) or (len(estadocivil.strip()) == 0) or (len(datanascimento.strip()) == 0) or (len(naturalidade.strip()) == 0) or (len(profissao.strip()) == 0) or (len(email.strip()) == 0) or (len(telefone.strip()) == 0) or (len(endereco.strip()) == 0):
             messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
-            return redirect('/pacientes/')
+            return redirect('plataforma:dados_paciente', id=id)
         
         pacientes = Pacientes.objects.filter(email=email)
         
         if pacientes.exists():     
                 messages.add_message(request, constants.ERROR, 'Já existe um paciente com esse E-mail')
-                return redirect('/pacientes/')
+                return redirect('plataforma:dados_paciente', id=id)
         try: 
             p1 = Pacientes(nome=nome,
                                 cpf=cpf,
@@ -56,11 +56,11 @@ def pacientes (request):
             p1.save()
         
             messages.add_message(request, constants.SUCCESS, 'Paciente Cadastrado com Sucesso')
-            return redirect('/pacientes/')
+            return redirect('plataforma:dados_paciente', id=id)
     
         except:
             messages.add_message(request, constants.ERROR, 'Erro interno do sistema')
-            return redirect('/pacientes/')
+            return redirect('plataforma:dados_paciente', id=id)
     
 @login_required(login_url='/auth/logar/')
 def dados_paciente_listar(request):
@@ -73,7 +73,7 @@ def dados_paciente(request, id):
     paciente = get_object_or_404(Pacientes, id=id)
     if not paciente.fisio == request.user:
         messages.add_message(request, constants.ERROR, 'Acesso negado a este PACIENTE. ')
-        return redirect('/dados_paciente/')
+        return redirect('dados_paciente_listar')
     if request.method == "GET":
         dados_paciente = DadosPaciente.objects.filter(paciente=paciente)
         return render(request, 'dados_paciente.html', {'paciente': paciente, 'dados_paciente': dados_paciente})
@@ -91,7 +91,7 @@ def dados_paciente(request, id):
         data_dadospaciente = request.POST.get('data_dadospaciente') or datetime.date.today()
         if (len(peso.strip()) == 0) or (len(qp.strip()) == 0) or (len(hma.strip()) == 0) or (len(hpp.strip()) == 0) or (len(antecedentepf.strip()) == 0) or (len(exame_fisico.strip()) == 0) or (len(exames_complementares.strip()) == 0) or (len(diagnostico.strip()) == 0) or (len(plano_terapeutico.strip()) == 0):
             messages.add_message(request, constants.ERROR, 'Preencha todos os campos, use 0 ou - quando nao houver valor!')
-            return redirect('/dados_paciente/')
+            return redirect('dados_paciente', id=id)
         
         paciente = DadosPaciente(paciente=paciente,
                                 #data=datetime.now(),
@@ -109,7 +109,7 @@ def dados_paciente(request, id):
         
         messages.add_message(request, constants.SUCCESS, 'Dados cadastrado com sucesso')
         
-        return redirect('/dados_paciente/')
+        return redirect(f'/plataforma/dados_paciente/{id}/')
     
 
 
@@ -119,7 +119,7 @@ def editar_paciente(request, id):
     paciente = get_object_or_404(Pacientes, id=id)
     if not paciente.fisio == request.user:
         messages.add_message(request, constants.ERROR, 'Esse paciente não é seu')
-        return redirect('/pacientes/')
+        return redirect('/plataforma/pacientes/')
     if request.method == "POST":
         paciente.nome = request.POST.get('nome')
         paciente.cpf = request.POST.get('cpf')
@@ -138,17 +138,17 @@ def editar_paciente(request, id):
             paciente.endereco
         ]):
             messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
-            return redirect(f'/editar_paciente/{id}/')
+            return redirect(f'/plataforma/editar_paciente/{id}/')
 
         try:
             paciente.datanascimento = datetime.strptime(paciente.datanascimento, '%Y-%m-%d').date()
             paciente.save()
             messages.add_message(request, constants.SUCCESS, 'Paciente atualizado com sucesso!')
-            return redirect('/pacientes/')
+            return redirect('/plataforma/pacientes/')
         except:
             messages.add_message(request, constants.ERROR, 'Erro ao atualizar paciente')
             messages.add_message(request, constants.ERROR, 'Data de nascimento inválida')
-            return redirect(f'/editar_paciente/{id}/')
+            return redirect(f'/plataforma/editar_paciente/{id}/')
 
     return render(request, 'editar_paciente.html', {'paciente': paciente})
             
@@ -186,7 +186,7 @@ def evolucao(request, id):  #id_paciente
     paciente = get_object_or_404(Pacientes, id=id) 
     if not paciente.fisio == request.user:
         messages.add_message(request, constants.ERROR, 'Esse paciente não é seu')
-        return redirect('/dados_evolucao/')
+        return redirect('/plataforma/dados_evolucao/')
     
      
     if request.method == "POST":
@@ -195,7 +195,7 @@ def evolucao(request, id):  #id_paciente
         data_criacao = request.POST.get('data_criacao') or datetime.date.today() #data_criacao = data_criacao or datetime.date.today()  # define a data padrão se não for fornecida
         if (len(titulo.strip()) == 0) or (len(evolucao.strip()) == 0):
             messages.add_message(request, constants.ERROR, 'Preencha todos os campos, use 0 ou - quando nao houver valor!')
-
+            return redirect('plataforma:evolucao', id=id)
         
         
        
@@ -208,7 +208,7 @@ def evolucao(request, id):  #id_paciente
         r1.save()
         
         messages.add_message(request, constants.SUCCESS, 'Evolução Cadastrada')
-        return redirect(f'/plano_evolucao/{id}')
+        return redirect('plataforma:plano_evolucao',id=id)
 
 
 

@@ -33,8 +33,8 @@
 
     </button>
 
-    
-    <a href="{% url 'imprimir_evolucoes' paciente.id %}" class="btn btn-outline-success" >
+
+    <a href="{% url 'plataforma:imprimir_evolucoes' paciente.id %}" class="btn btn-outline-success" >
         🖨️ Imprimir Evoluções
     </a>
     
@@ -83,7 +83,7 @@
 
                     <div id="form-evolucao" style="display: block;">
 
-                        <form action="{% url 'evolucao' paciente.id %}" method="POST">{% csrf_token %}
+                        <form action="{% url 'plataforma:evolucao' paciente.id %}" method="POST">{% csrf_token %}
 
                             <label for="validationServerUsername">Título</label>
 

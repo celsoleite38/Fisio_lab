@@ -3,9 +3,9 @@
 {% block 'plataforma' %}
     <div class="container mt-4">
         <h2 class="mb-4">Selecionar Evoluções para Impressão</h2>
-        
-        <form method="post" action="{% url 'imprimir_evolucoes' paciente.id %}"> {% csrf_token %}
-            
+
+        <form method="post" action="{% url 'plataforma:imprimir_evolucoes' paciente.id %}"> {% csrf_token %}
+
             <div class="text-end">
                 <button type="submit" class="btn btn-outline-success">
                     <strong>🖨️ Imprimir Selecionadas</strong>

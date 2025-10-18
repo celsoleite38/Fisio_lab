@@ -71,7 +71,7 @@
                     </script>
 
 
-                    <a href="{% url 'editar_paciente' paciente.pk %}" class="link-hover">
+                    <a href="{% url 'plataforma:editar_paciente' paciente.pk %}" class="link-hover">
                         <button type="button" class="btn btn-primary">
                             Editar
                         </button>
@@ -99,8 +99,8 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    
-                    <form action="{% url 'pacientes' %}" method="POST"> {% csrf_token %}
+
+                    <form action="{% url 'plataforma:pacientes' %}" method="POST"> {% csrf_token %}
                         <div class="row">
                             <div class="col-md-3">
                             <img src="{% static 'plataforma/img/perfil2.png' %}">
