@@ -12,9 +12,9 @@ from .models import Ativacao, PerfilProfissional
 from hashlib import sha256
 from django.contrib.auth.decorators import login_required
 from .forms import PerfilProfissionalForm
-
+from django.views.decorators.csrf import csrf_exempt
 #from django.core.mail import send_mail
-
+from django.views import View
 def cadastro(request):
     if request.method == "GET":
         if request.user.is_authenticated:
@@ -102,3 +102,61 @@ def editar_perfil_profissional(request):
     return render(request, 'editar_perfil_profissional.html', {'form': form})
 
 
+
+class ReenviarAtivacaoView(View):
+    def post(self, request):
+        email = request.POST.get('email')
+        
+        try:
+            from django.contrib.auth import get_user_model
+            User = get_user_model()
+            
+            # Busca flexível por email ou username
+            try:
+                usuario = User.objects.get(email=email)
+            except User.DoesNotExist:
+                usuario = User.objects.get(username=email)
+            
+            if usuario.is_active:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Esta conta já está ativa!'
+                })
+            else:
+                # Gera novo token usando o mesmo método do cadastro
+                token = sha256(f"{usuario.username}{usuario.email}".encode()).hexdigest()
+                
+                # Atualiza ou cria o token de ativação
+                ativacao, created = Ativacao.objects.get_or_create(
+                    user=usuario,
+                    defaults={'token': token, 'ativo': False, 'email': usuario.email}
+                )
+                if not created:
+                    ativacao.token = token
+                    ativacao.ativo = False
+                    ativacao.save()
+                
+                link_ativacao = f"https://nutri.innosoft.com.br/auth/ativar_conta/{token}/"
+                
+                # Envia o email
+                path_template = os.path.join(settings.BASE_DIR, 'autenticacao/templates/emails/cadastro_confirmado.html')
+                email_html(path_template, 'Cadastro confirmado', [usuario.email], 
+                          username=usuario.username, link_ativacao=link_ativacao)
+                
+                return JsonResponse({
+                    'success': True,
+                    'message': 'Email de ativação reenviado com sucesso! Verifique sua caixa de entrada.'
+                })
+                
+        except User.DoesNotExist:
+            return JsonResponse({
+                'success': False,
+                'message': 'Email não encontrado em nosso sistema.'
+            })
+        except Exception as e:
+            # Log para diagnóstico (aparece apenas no servidor)
+            print(f"Erro no reenvio de ativação para {email}: {str(e)}")
+            return JsonResponse({
+                'success': False,
+                'message': 'Erro ao reenviar email de ativação. Tente novamente.'
+            })
