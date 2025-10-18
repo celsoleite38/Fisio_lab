@@ -14,12 +14,13 @@
     margin-top: 8%;
     margin-left: 15%;
     width: 70%;
+    
 }
 .titulo{
     font-weight: bold;
 }
 .sub-titulo{
-    color: rgb(241, 234, 234);
+    color: rgba(0, 0, 0, 1);
 }
 .input-form{
     margin-top: 15px;
@@ -28,7 +29,7 @@
     outline: 0;
 }
 .input-form:focus{
-    border: 2px solid #27DB8F !important;
+    border: 2px solid #4cc099 !important;
     outline: 0 !important;
     box-shadow: none !important;
 }
@@ -45,3 +46,40 @@
     font-weight: bold;
 }
     
+.login-extra {
+  display: flex;
+  flex-wrap: wrap;           /* Permite que os botões quebrem linha em telas pequenas */
+  gap: 10px;                 /* Espaço entre botões e textos */
+  align-items: center;
+  justify-content: center;   /* Centraliza no centro */
+  text-align: center;
+  margin-top: 20px;
+}
+
+.login-extra p {
+  flex: 1 1 100%;            /* Garante que o texto ocupe linha completa no mobile */
+  margin: 0;
+  font-weight: 600;
+}
+
+.btn-extra {
+  background-color: #00b67a;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.btn-extra:hover {
+  background-color: #009e6a;
+}
+
+/* Responsividade */
+@media (max-width: 600px) {
+  .btn-extra {
+    width: 100%;             /* Ocupa largura total no celular */
+    text-align: center;
+  }
+}

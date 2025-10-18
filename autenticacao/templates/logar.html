@@ -2,19 +2,20 @@
 {% load static %}
 {% block 'head' %}
     <link rel="stylesheet" href="{% static 'autenticacao/css/css.css' %}">
+    <link rel="icon" href="{% static 'autenticacao/img/favicon.ico' %}">
 {% endblock %}
-{% block 'titulo' %}Fisio Unnisoft Acesse sua Conta{% endblock %}
+{% block 'titulo' %}Fisio Innosoft Acesse sua Conta{% endblock %}
 {% block 'body' %}
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-3 sidebar">
                 <div class="logo_sidebar">
                     <h2 class="logo">
-                        <img class="img_logo_sidebar" src="{% static 'autenticacao/img/logo1.png' %}">
+                        <img class="img_logo_sidebar" src="{% static 'autenticacao/img/fisio_logo.png' %}">
                     </h2>
                 </div>
             </div>
-            <div class="col-md-9">
+            <div class="col-md-9 area_form">
                 <div class="area_cadastrar">
                     {% if messages %}
                         <br>
@@ -24,7 +25,7 @@
                             </div>
                         {% endfor %}
                     {% endif %}
-                    <h2 class="titulo">Seja bem vindo</h2>
+                    <h2 class="titulo">Seja Bem Vindo</h2>
                     <p class="sub-titulo">Entre com sua conta</p>
                     <hr>
                     <form action="{% url 'logar' %}" method="POST">{% csrf_token %}
@@ -34,13 +35,24 @@
                         <span class="bold">Senha</span>
                         <input class="form-control input-form" name="senha" type="password" placeholder="Digite sua senha...">
                         <br>
-                        <button class="btn-first">Logar</button>
-                        <p><a href="{% url 'password_reset' %}">Esqueceu a senha?</a></p>
+                        <button class="btn-first">Entrar</button>
+                        <p><h3 style="position: absolute; bottom: 430px; font-weight: bold"></h3><a href="{% url 'password_reset' %}">Esqueceu a senha?</a></p>
 
                     </form>
-                    
+                    <div class="login-extra"></div>
+                        <h5 style="position: absolute; bottom: 130px; ">Não tem uma conta? <a href= "{% url 'cadastro' %}">Registre-se </a>
+                        &nbsp;|&nbsp;
+                            Reenviar email de ativação? 
+                            <a href="#" data-toggle="modal" data-target="#modalReenviarAtivacao">
+                                Reenviar ativação
+                            </a></h5>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+
+  
+
 {% endblock %}

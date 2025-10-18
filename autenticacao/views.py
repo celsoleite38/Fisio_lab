@@ -64,7 +64,7 @@ def logar(request):
             return redirect('/auth/logar')
         else:
             auth.login(request, usuario)
-            return redirect('/pacientes')
+            return redirect('/plataforma/pacientes/')
         
 def sair(request):
     auth.logout(request) 

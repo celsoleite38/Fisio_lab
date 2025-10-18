@@ -8,19 +8,21 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css">
         <title>{% block 'titulo' %}{% endblock %}</title>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <link rel="icon" href="{% static 'autenticacao/img/fisio_logo.png' %}">
+        <title>FISIO-Innosoft</title>
     </head>
     <body>
         {% if user.is_authenticated %}
         <nav style="background-image: linear-gradient(to right, #4cc099, #0babf5);" class="navbar navbar-expand-lg navbar-dark">
                 <a href="javascript:history.back()">
-                    <img src="{% static 'autenticacao/img/logo1.png' %}" style="width: 70px; height: auto;">
+                    <img src="{% static 'autenticacao/img/fisio_logo.png' %}" style="width: 70px; height: auto;">
                 </a>
                 
                 <!-- Deixa os textos soltos, sem link -->
-                <span style="font-weight: bold" class="navbar-brand d-none d-md-block">
-                    FISIO-INOSOFT - 
-                    <font color="#00007d" size="5">{{ perfil.nome_completo }}</font>
-                    <font color="white" size="5"> - Crefito- {{ perfil.crefito }}</font>
+                <span style="font-weight: bold" class="navbar-brand d-none d-md-block">&nbsp;
+                    Bem-Vindo(a), 
+                    <font color="#00007d" size="5">{{ perfil.nome_completo }}</font>&nbsp;
+                    <font color="white" size="5"> &nbsp; Crefito: {{ perfil.crefito }}</font>
                 </span>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>

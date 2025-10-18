@@ -160,5 +160,9 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'josecelsoleite@gmail.com'
 EMAIL_HOST_PASSWORD = 'qutc nfnu jgyc ivjf'
-DEFAULT_FROM_EMAIL = 'Fisio-Minas <noreply@fisiominas.com.br>'
+DEFAULT_FROM_EMAIL = 'Fisio-Innosoft <noreply@fisiominas.com.br>'
 EMAIL_FAIL_SILENTLY = False
+
+LOGIN_URL = '/auth/logar/'
+LOGIN_REDIRECT_URL = '/plataforma/'
+LOGOUT_REDIRECT_URL = '/auth/logar/'
