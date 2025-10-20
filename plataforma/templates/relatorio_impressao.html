@@ -1,110 +1,67 @@
-{% extends 'base.html' %}
+{% extends 'base_plataforma.html' %}
+{% load static %}
 
 {% block 'body' %}
-<style>
-    @media print {
-        @page {
-            size: A4;
-            margin: 0.5cm;
-        }
-        .no-print {
-            display: none !important;
-        }
-        
-    }
-
-    .assinatura {
-        margin-top: 80px;
-        text-align: center;
-    }
-
-    .linha-assinatura {
-        border-top: 1px solid #000;
-        width: 300px;
-        margin: 0 auto;
-        padding-top: 5px;
-    }
-
-    .footer-print {
-        position: relative;
-        bottom: 0;
-        width: 100%;
-        padding-top: 2px;
-    }
-</style>
-
 <div class="container mt-4">
     <!-- Cabeçalho Institucional -->
     <div class="border-bottom pb-3 mb-4">
         <h3 class="text-center">{{perfil.nomeclinica}} - Evolução</h3>
         <div class="d-flex justify-content-between">
-            
             <div>
                 <strong>Paciente:</strong> {{ paciente.nome }}<br>
                 <strong>Data de Nascimento:</strong> {{ paciente.datanascimento|date:"d/m/Y" }}<br>
                 <strong>CPF:</strong> {{ paciente.cpf }}<br>
             </div>
-{% if perfil %}
-    <div class="mb-3">
-        
-        <div>
-            <strong>Fisioterapeuta:</strong> {{ perfil.nome_completo }}<br>
-            <strong>CPF:</strong> {{ perfil.cpf }}<br>
-            <strong>CREFITO:</strong> {{ perfil.crefito }}
-        </div>
-    </div>
-    {% if perfil.logotipo %}
+            {% if perfil %}
+            <div class="mb-3">
+                <div>
+                    <strong>Fisioterapeuta:</strong> {{ perfil.nome_completo }}<br>
+                    <strong>CPF:</strong> {{ perfil.cpf }}<br>
+                    <strong>CREFITO:</strong> {{ perfil.crefito }}
+                </div>
+            </div>
+            {% if perfil.logotipo %}
             <img src="{{ perfil.logotipo.url }}" height="80" class="mb-2">
-        {% endif %}
-{% endif %}
+            {% endif %}
+            {% endif %}
         </div>
     </div>
-
-
 
     <!-- Botão de imprimir -->
-    <div class="text-end mb-3">
-        <button class="btn btn-success no-print" onclick="window.print()">
+    <div class="text-end mb-3 no-print">
+        <button class="btn btn-success" onclick="window.print()">
             🖨️ Imprimir Relatório
         </button>
     </div>
 
     <!-- Tabela das evoluções -->
-    <table class="table table-bordered">
-        <thead class="table-light">
-            
-           
-        </thead>
-        <tbody>
-            {% for evolucao in evolucoes %}
-            <table class="table table-bordered mb-4">
-                <thead class="table-light">
-                    <tr>
-                        <th style="width: 20%; background-color: rgba(169, 179, 177, 0.89);">Data</th>
-                        <th style= "background-color: rgba(169, 179, 177, 0.89);">Título</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>{{ evolucao.data_criacao|date:"d/m/Y" }}</td>
-                        <td>{{ evolucao.titulo }}</td>
-                    </tr>
-                    <tr>
-                        <th colspan="2" style="background-color: rgb(169, 179, 177, 0.9); text-align: left; ">Evolução</th>
-                    </tr>
-                    <tr>
-                        <td colspan="2" style="white-space: pre-wrap;">{{ evolucao.evolucao }}</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            {% empty %}
-            <tr>
-                <td colspan="2">Nenhuma evolução encontrada.</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="evolucao-print">
+        {% for evolucao in evolucoes %}
+        <table class="table table-bordered mb-4">
+            <thead class="table-light">
+                <tr>
+                    <th style="width: 20%; background-color: rgba(169, 179, 177, 0.89);">Data</th>
+                    <th style="background-color: rgba(169, 179, 177, 0.89);">Título</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>{{ evolucao.data_criacao|date:"d/m/Y" }}</td>
+                    <td>{{ evolucao.titulo }}</td>
+                </tr>
+                <tr>
+                    <th colspan="2" style="background-color: rgb(169, 179, 177, 0.9); text-align: left;">Evolução</th>
+                </tr>
+                <tr>
+                    <td colspan="2" class="conteudo-evolucao">{{ evolucao.evolucao }}</td>
+                </tr>
+            </tbody>
+        </table>
+        {% empty %}
+        <p>Nenhuma evolução encontrada.</p>
+        {% endfor %}
+    </div>
+
     <p>Data de Impressão: {{ today }}</p>
     <div class="footer-print">
         <div class="assinatura">

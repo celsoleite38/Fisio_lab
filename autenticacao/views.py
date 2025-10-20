@@ -95,7 +95,7 @@ def editar_perfil_profissional(request):
         form = PerfilProfissionalForm(request.POST, request.FILES, instance=perfil)
         if form.is_valid():
             form.save()
-            return redirect('pacientes')  # ou qualquer outra página
+            return redirect('plataforma:pacientes')  # ou qualquer outra página
     else:
         form = PerfilProfissionalForm(instance=perfil)
 

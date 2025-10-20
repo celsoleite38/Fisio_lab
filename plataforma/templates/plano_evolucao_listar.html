@@ -16,6 +16,20 @@
 
     
 <h1 class="titulo">Evolução - Escolha o Paciente </h1>
+ <!-- Formulário de Busca -->
+    <form method="GET" action="{% url 'plataforma:plano_evolucao_listar' %}">
+        <div class="input-group mb-4">
+            <input type="text" name="q" class="form-control" placeholder="Buscar Paciente pelo nome..." value="{{ request.GET.q }}">
+            <button class="btn btn-primary" type="submit">🔍 Buscar</button>
+            {% if request.GET.q %}
+                <a href="{% url 'plataforma:plano_evolucao_listar' %}" class="btn btn-secondary">Limpar</a>
+            {% endif %}
+        </div>
+    </form>
+
+    <!-- Resultado da Busca -->
+    
+
     <div class="row">
         {% for paciente in pacientes%}
             <div class="col-md-4">

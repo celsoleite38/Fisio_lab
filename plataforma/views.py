@@ -14,10 +14,22 @@ from .forms import PacienteForm, EvolucaoForm
 from django.views.decorators.http import require_GET
 
 @login_required(login_url='/auth/logar/')
-def pacientes (request):
-    if request.method =="GET":
+def pacientes(request):
+    
+    if request.method == "GET":
         pacientes = Pacientes.objects.filter(fisio=request.user)
-        return render(request, 'pacientes.html', {'pacientes':pacientes})
+        
+        query = request.GET.get('q')
+        
+        if query:
+            pacientes = pacientes.filter(nome__icontains=query)
+                    
+        return render(request, 'pacientes.html', {
+            'pacientes': pacientes,
+            'query': query
+        })
+        
+    
     elif request.method == "POST":
         nome = request.POST.get('nome')
         cpf = request.POST.get('cpf')
@@ -30,50 +42,66 @@ def pacientes (request):
         telefone = request.POST.get('telefone')
         endereco = request.POST.get('endereco')
         
+        # CORREÇÃO: Removi a referência ao 'id' que não existe
         if (len(nome.strip()) == 0) or (len(sexo.strip()) == 0) or (len(cpf.strip()) == 0) or (len(estadocivil.strip()) == 0) or (len(datanascimento.strip()) == 0) or (len(naturalidade.strip()) == 0) or (len(profissao.strip()) == 0) or (len(email.strip()) == 0) or (len(telefone.strip()) == 0) or (len(endereco.strip()) == 0):
             messages.add_message(request, constants.ERROR, 'Preencha todos os campos')
-            return redirect('plataforma:dados_paciente', id=id)
+            return redirect('plataforma:pacientes')  # ← CORREÇÃO: volta para a lista
         
         pacientes = Pacientes.objects.filter(email=email)
         
         if pacientes.exists():     
-                messages.add_message(request, constants.ERROR, 'Já existe um paciente com esse E-mail')
-                return redirect('plataforma:dados_paciente', id=id)
+            messages.add_message(request, constants.ERROR, 'Já existe um paciente com esse E-mail')
+            return redirect('plataforma:pacientes')  # ← CORREÇÃO: volta para a lista
+        
         try: 
-            p1 = Pacientes(nome=nome,
-                                cpf=cpf,
-                                sexo=sexo,
-                                estadocivil=estadocivil,
-                                datanascimento=datanascimento,
-                                naturalidade=naturalidade,
-                                profissao=profissao,
-                                email=email,
-                                telefone=telefone,
-                                endereco=endereco,
-                                fisio=request.user
+            p1 = Pacientes(
+                nome=nome,
+                cpf=cpf,
+                sexo=sexo,
+                estadocivil=estadocivil,
+                datanascimento=datanascimento,
+                naturalidade=naturalidade,
+                profissao=profissao,
+                email=email,
+                telefone=telefone,
+                endereco=endereco,
+                fisio=request.user
             )
             
             p1.save()
         
             messages.add_message(request, constants.SUCCESS, 'Paciente Cadastrado com Sucesso')
-            return redirect('plataforma:dados_paciente', id=id)
+            # CORREÇÃO: Redireciona para a lista de pacientes ou para o novo paciente
+            return redirect('plataforma:dados_paciente', id=p1.id)  # ← Volta para a lista
+            # Ou se quiser ir direto para os dados do paciente:
+            # return redirect('plataforma:dados_paciente', id=p1.id)  # ← Usa o ID do paciente salvo
     
-        except:
+        except Exception as e:
+            print(f"Erro ao salvar paciente: {e}")  # Para debug
             messages.add_message(request, constants.ERROR, 'Erro interno do sistema')
-            return redirect('plataforma:dados_paciente', id=id)
+            return redirect('plataforma:pacientes')  # ← CORREÇÃO: volta para a lista
     
 @login_required(login_url='/auth/logar/')
 def dados_paciente_listar(request):
     if request.method == "GET":
         pacientes = Pacientes.objects.filter(fisio=request.user)
-        return render(request, 'dados_paciente_listar.html', {'pacientes': pacientes})
+        query = request.GET.get('q')
+        if query:
+            pacientes = pacientes.filter(nome__icontains=query)
+        
+        return render(request, 'dados_paciente_listar.html', {
+            'pacientes': pacientes,
+            'query': query
+        })
+        
     
 @login_required(login_url='/auth/logar/')
 def dados_paciente(request, id):
     paciente = get_object_or_404(Pacientes, id=id)
     if not paciente.fisio == request.user:
-        messages.add_message(request, constants.ERROR, 'Acesso negado a este PACIENTE. ')
-        return redirect('dados_paciente_listar')
+        messages.add_message(request, constants.ERROR, 'Acesso negado a este PACIENTE.')
+        return redirect('plataforma:dados_paciente_listar')
+    
     if request.method == "GET":
         dados_paciente = DadosPaciente.objects.filter(paciente=paciente)
         return render(request, 'dados_paciente.html', {'paciente': paciente, 'dados_paciente': dados_paciente})
@@ -89,27 +117,30 @@ def dados_paciente(request, id):
         diagnostico = request.POST.get('diagnostico')
         plano_terapeutico = request.POST.get('plano_terapeutico')
         data_dadospaciente = request.POST.get('data_dadospaciente') or datetime.date.today()
+        
+        # Validação para garantir que todos os campos estejam preenchidos
         if (len(peso.strip()) == 0) or (len(qp.strip()) == 0) or (len(hma.strip()) == 0) or (len(hpp.strip()) == 0) or (len(antecedentepf.strip()) == 0) or (len(exame_fisico.strip()) == 0) or (len(exames_complementares.strip()) == 0) or (len(diagnostico.strip()) == 0) or (len(plano_terapeutico.strip()) == 0):
             messages.add_message(request, constants.ERROR, 'Preencha todos os campos, use 0 ou - quando nao houver valor!')
-            return redirect('dados_paciente', id=id)
+            return redirect('plataforma:dados_paciente', id=id)
         
-        paciente = DadosPaciente(paciente=paciente,
-                                #data=datetime.now(),
-                                peso=peso,
-                                qp=qp,
-                                hma=hma,
-                                hpp=hpp,
-                                antecedentepf=antecedentepf,
-                                exame_fisico=exame_fisico,  
-                                exames_complementares=exames_complementares,
-                                diagnostico=diagnostico,
-                                plano_terapeutico=plano_terapeutico,
-                                data_dadospaciente=data_dadospaciente)                        
-        paciente.save()
+        dados = DadosPaciente(
+            paciente=paciente,
+            peso=peso,
+            qp=qp,
+            hma=hma,
+            hpp=hpp,
+            antecedentepf=antecedentepf,
+            exame_fisico=exame_fisico,
+            exames_complementares=exames_complementares,
+            diagnostico=diagnostico,
+            plano_terapeutico=plano_terapeutico,
+            data_dadospaciente=data_dadospaciente
+        )
+        dados.save()
         
         messages.add_message(request, constants.SUCCESS, 'Dados cadastrado com sucesso')
-        
         return redirect(f'/plataforma/dados_paciente/{id}/')
+
     
 
 
@@ -156,7 +187,15 @@ def editar_paciente(request, id):
 def plano_evolucao_listar (request):
     if request.method == "GET":
         pacientes = Pacientes.objects.filter(fisio=request.user)
-        return render(request, 'plano_evolucao_listar.html', {'pacientes': pacientes})
+        query = request.GET.get('q')
+        if query:
+            pacientes = pacientes.filter(nome__icontains=query)
+        
+        return render(request, 'plano_evolucao_listar.html', {
+            'pacientes': pacientes,
+            'query': query
+        })
+        
     
         
 def plano_evolucao(request, id):

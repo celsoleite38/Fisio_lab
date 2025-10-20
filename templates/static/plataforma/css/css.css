@@ -1,3 +1,4 @@
+/* ===== ESTILOS GERAIS ===== */
 .card-lateral{
     background-image: linear-gradient(to right, #4cc099, #0babf5);
     color: white;
@@ -44,7 +45,99 @@
     margin-left: -12%;
 } 
 
-/* RESPONSIVIDADE PARA TABLETS */
+.body {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+.btn-outline-success {
+    padding: 8px 16px;
+    border: 2px solid #28a745;
+    border-radius: 4px;
+    color: #28a745;
+    background-color: transparent;
+    transition: all 0.3s;
+}
+
+.btn-outline-success:hover {
+    background-color: #28a745;
+    color: white;
+}
+
+/* ===== ESTILOS DE EVOLUÇÃO ===== */
+.fundo-evolucao{
+    background-color: #D9D9D9;
+    padding: 15px;
+}
+
+.evolucao{
+    background-color: #A8A8A8;
+    padding: 15px;
+    box-shadow: 4px 4px 10px gray;
+}
+
+.head-evolucao{
+    background-color: #cac5c5;
+    padding: 15px;
+    font-weight: bold;
+}
+
+.body-evolucao{
+    padding: 15px;
+    font-weight: bold;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    word-break: break-word;
+    line-height: 1.5;
+}
+
+/* ===== ESTILOS DE IMPRESSÃO ===== */
+.footer-print {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.assinatura {
+    margin-top: 30px;
+    text-align: center;
+}
+
+.linha-assinatura {
+    border-top: 1px solid #000;
+    width: 300px;
+    margin: 0 auto;
+    padding-top: 5px;
+}
+
+@media print {
+    .btn,
+    .card-lateral,
+    .no-print { 
+        display: none !important; 
+    }
+    
+    @page {
+        size: A4;
+        margin: 2.5cm;
+    }
+}
+
+/* ===== RESPONSIVIDADE ===== */
+
+/* Tablets */
+@media (max-width: 1300px) {
+    .card-paciente {
+        width: 90%;
+    }
+    
+    .descricao {
+        margin-left: -8%;
+    }
+}
+
 @media (max-width: 1024px) {
     .card-lateral {
         padding: 15px;
@@ -79,8 +172,19 @@
         width: 100% !important;
         order: 1;
     }
+    
+    /* Evolução em tablets */
+    .fundo-evolucao {
+        padding: 30px;
+    }
+    
+    .body-evolucao,
+    .head-evolucao {
+        padding: 20px;
+    }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
     .card-lateral {
         padding: 12px;
@@ -111,6 +215,16 @@
     .navbar-brand font {
         font-size: 14px !important;
     }
+    
+    /* Evolução em mobile */
+    .fundo-evolucao {
+        padding: 20px;
+    }
+    
+    .body-evolucao,
+    .head-evolucao {
+        padding: 15px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -122,56 +236,234 @@
     .card-lateral h3 {
         font-size: 14px;
     }
+    
+    .body-evolucao,
+    .head-evolucao {
+        padding: 10px;
+    }
 }
 
-/* Estilos para impressão */
-@media print {
-    .btn { 
-        display: none; 
+/* Estilos específicos para impressão de evolução */
+.evolucao-print .conteudo-evolucao {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+    padding: 15px;
+}
+
+/* ===== ESTILOS PARA TABELA DE SELEÇÃO DE EVOLUÇÃO ===== */
+.tabela-selecao-evolucao {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.tabela-selecao-evolucao td {
+    vertical-align: top;
+}
+
+/* Larguras das colunas */
+.col-checkbox {
+    width: 5%;
+}
+
+.col-data {
+    width: 15%;
+}
+
+.col-titulo {
+    width: 20%;
+}
+
+.col-evolucao {
+    width: 60%;
+}
+
+.conteudo-evolucao-tabela {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-weight: normal;
+    font-family: Verdana, sans-serif;
+    line-height: 1.4;
+    max-width: 100%;
+}
+
+/* ===== ESTILOS PARA TABELAS DE DADOS DO PACIENTE ===== */
+.tabela-dados-paciente {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.tabela-dados-paciente td {
+    vertical-align: top;
+}
+
+/* Classes para quebra de texto em todas as células com conteúdo longo */
+.conteudo-quebravel {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-weight: normal;
+    font-family: Verdana, sans-serif;
+    line-height: 1.4;
+    max-width: 100%;
+}
+
+/* Larguras específicas para cada coluna */
+.col-data {
+    width: 10%;
+}
+
+.col-peso {
+    width: 8%;
+}
+
+.col-qp {
+    width: 12%;
+}
+
+.col-hma {
+    width: 12%;
+}
+
+.col-hpp {
+    width: 12%;
+}
+
+.col-antecedentes {
+    width: 20%;
+}
+
+.col-exame-fisico {
+    width: 18%;
+}
+
+.col-exame-complementar {
+    width: 18%;
+}
+
+.col-diagnostico {
+    width: 18%;
+}
+
+.col-plano-terapeutico {
+    width: 18%;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 768px) {
+    .tabela-dados-paciente {
+        font-size: 12px;
     }
     
-    .card-lateral {
-        display: none;
+    .col-data { width: 15%; }
+    .col-peso { width: 10%; }
+    .col-qp { width: 15%; }
+    .col-hma { width: 15%; }
+    .col-hpp { width: 15%; }
+    .col-antecedentes { width: 30%; }
+}
+
+/* ===== ESTILOS PARA IMPRESSÃO DE DADOS DO PACIENTE ===== */
+.tabela-impressao-dados {
+    table-layout: fixed;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.tabela-impressao-dados td {
+    vertical-align: top;
+}
+
+/* Classes para quebra de texto na impressão */
+.conteudo-quebravel-impressao {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    word-break: break-word;
+    font-weight: normal;
+    font-family: Verdana, sans-serif;
+    line-height: 1.4;
+    max-width: 100%;
+    font-size: 12px;
+}
+
+/* Larguras específicas para impressão */
+.col-data-impressao {
+    width: 10%;
+}
+
+.col-peso-impressao {
+    width: 8%;
+}
+
+.col-qp-impressao {
+    width: 15%;
+}
+
+.col-hma-impressao {
+    width: 15%;
+}
+
+.col-hpp-impressao {
+    width: 15%;
+}
+
+.col-exame-fisico-impressao {
+    width: 18%;
+}
+
+.col-exame-complementar-impressao {
+    width: 18%;
+}
+
+.col-diagnostico-impressao {
+    width: 18%;
+}
+
+.col-plano-terapeutico-impressao {
+    width: 18%;
+}
+
+/* Estilos de impressão */
+@media print {
+    @page {
+        size: A4;
+        margin: 0.5cm;
+    }
+    
+    .no-print {
+        display: none !important;
+    }
+    
+    .tabela-impressao-dados {
+        font-size: 11px;
+    }
+    
+    .conteudo-quebravel-impressao {
+        font-size: 11px;
     }
 }
 
-.body {
-    max-width: 100%;
-    overflow-x: hidden;
-}
-
+/* Estilos gerais de impressão já existentes - mantenha estes */
 .footer-print {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+    position: relative;
+    bottom: 0;
+    width: 100%;
+    padding-top: 5px;
 }
 
 .assinatura {
+    margin-top: 30px;
     text-align: center;
 }
 
-.btn-outline-success {
-    padding: 8px 16px;
-    border: 2px solid #28a745;
-    border-radius: 4px;
-    color: #28a745;
-    background-color: transparent;
-    transition: all 0.3s;
-}
-
-.btn-outline-success:hover {
-    background-color: #28a745;
-    color: white;
-}
-
-/* Correção para a media query que estava incompleta */
-@media (max-width: 1300px) {
-    .card-paciente {
-        width: 90%;
-    }
-    
-    .descricao {
-        margin-left: -8%;
-    }
+.linha-assinatura {
+    border-top: 1px solid #000;
+    width: 300px;
+    margin: 0 auto;
+    padding-top: 5px;
 }

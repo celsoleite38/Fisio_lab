@@ -1,38 +1,7 @@
-{% extends 'base.html' %}
+{% extends 'base_plataforma.html' %}
 <!--{% load static %}-->
 
 {% block 'body' %}
-
-<style>
-    @media print {
-        @page {
-            size: A4;
-            margin: 0.5cm;
-        }
-        .no-print {
-            display: none !important;
-        }
-    }
-
-    .assinatura {
-        margin-top: 80px;
-        text-align: center;
-    }
-
-    .linha-assinatura {
-        border-top: 1px solid #000;
-        width: 300px;
-        margin: 0 auto;
-        padding-top: 5px;
-    }
-
-    .footer-print {
-        position: relative;
-        bottom: 0;
-        width: 100%;
-        padding-top: 5px;
-    }
-</style>
     {% if messages %}
         <br>
         {% for message in messages %}
@@ -53,88 +22,87 @@
                 <strong>Data Nascimento:</strong> {{ paciente.datanascimento }}<br>
                 <strong>CPF:</strong> {{ paciente.cpf }}
             </div>
-{% if perfil %}
-    <div class="mb-3">
-         <div>
-            <strong>Fisioterapeuta:</strong> {{ perfil.nome_completo }}<br>
-            <strong>CPF:</strong> {{ perfil.cpf }}<br>
-            <strong>Crefito:</strong> {{ perfil.crefito }}
+            {% if perfil %}
+            <div class="mb-3">
+                 <div>
+                    <strong>Fisioterapeuta:</strong> {{ perfil.nome_completo }}<br>
+                    <strong>CPF:</strong> {{ perfil.cpf }}<br>
+                    <strong>Crefito:</strong> {{ perfil.crefito }}
+                </div>
+            </div>
+            {% if perfil.logotipo %}
+                <img src="{{ perfil.logotipo.url }}" height="80" class="mb-2">
+            {% endif %}
+            {% endif %}
         </div>
     </div>
-    {% if perfil.logotipo %}
-            <img src="{{ perfil.logotipo.url }}" height="80" class="mb-2">
-            <!--<img src="{{ MEDIA_URL }}logos_profissionais/{{ perfil.logotipo }}" height="80" class="mb-2">-->
-    {% endif %}
-{% endif %}
-</div>
-<button class="btn btn-success no-print" onclick="window.print()">
-    🖨️ Imprimir
-</button>
-<br>
-<h2>Dados do Paciente</h2> 
-<div class="text-end mb-3">
-    
-</div>
 
-<div>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-            <th scope="col">Data</th>
-            <th scope="col">Peso</th>
-            <th scope="col">QP</th>
-            <th scope="col">HMA</th>
-            <th scope="col">HPP</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for dado in dados_paciente %}
-            <tr>
-                <th scope="row">{{dado.data|date:"d/m/Y"}}</th>
-                <td scope="row">{{dado.peso}}Kg</td>
-                <td>{{dado.qp}} </td>
-                <td>{{dado.hma}}</td>
-                <td>{{dado.hpp}}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    <table class="table table-striped">
-        <thead>
-            <tr>
-            <th scope="col">Data</th>
-            <th scope="col">Exames fisicos</th>
-            <th scope="col">Exames Complementares</th>
-            <th scope="col">Diagnostico</th>
-            <th scope="col">Plano Terapeutico</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for dado in dados_paciente %}
-            <tr>
-                <th scope="row">{{dado.data|date:"d/m/Y"}}</th>
-                <td scope="row">{{dado.exame_fisico}} </td>
-                <td>{{dado.exames_complementares}} </td>
-                <td>{{dado.diagnostico}} </td>
-                <td>{{dado.plano_terapeutico}} </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <button class="btn btn-success no-print" onclick="window.print()">
+        🖨️ Imprimir
+    </button>
     
-
- 
-    <p>Data de Impressão: {{ today }}</p>
-  
-    <div class="footer-print">
-        <div class="assinatura">
-            <div class="linha-assinatura"></div>
-            <div class="mt-1">
-                Assinatura e Carimbo do Profissional
+    <br>
+    <h2>Dados do Paciente</h2> 
+    
+    <div>
+        <!-- Primeira tabela -->
+        <table class="table table-striped tabela-impressao-dados">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-data-impressao">Data</th>
+                    <th scope="col" class="col-peso-impressao">Peso</th>
+                    <th scope="col" class="col-qp-impressao">QP</th>
+                    <th scope="col" class="col-hma-impressao">HMA</th>
+                    <th scope="col" class="col-hpp-impressao">HPP</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dado in dados_paciente %}
+                <tr>
+                    <td class="col-data-impressao">{{dado.data|date:"d/m/Y"}}</td>
+                    <td class="col-peso-impressao">{{dado.peso}}Kg</td>
+                    <td class="col-qp-impressao conteudo-quebravel-impressao">{{dado.qp}}</td>
+                    <td class="col-hma-impressao conteudo-quebravel-impressao">{{dado.hma}}</td>
+                    <td class="col-hpp-impressao conteudo-quebravel-impressao">{{dado.hpp}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        
+        <!-- Segunda tabela -->
+        <table class="table table-striped tabela-impressao-dados">
+            <thead>
+                <tr>
+                    <th scope="col" class="col-data-impressao">Data</th>
+                    <th scope="col" class="col-exame-fisico-impressao">Exames físicos</th>
+                    <th scope="col" class="col-exame-complementar-impressao">Exames Complementares</th>
+                    <th scope="col" class="col-diagnostico-impressao">Diagnostico</th>
+                    <th scope="col" class="col-plano-terapeutico-impressao">Plano Terapeutico</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dado in dados_paciente %}
+                <tr>
+                    <td class="col-data-impressao">{{dado.data|date:"d/m/Y"}}</td>
+                    <td class="col-exame-fisico-impressao conteudo-quebravel-impressao">{{dado.exame_fisico}}</td>
+                    <td class="col-exame-complementar-impressao conteudo-quebravel-impressao">{{dado.exames_complementares}}</td>
+                    <td class="col-diagnostico-impressao conteudo-quebravel-impressao">{{dado.diagnostico}}</td>
+                    <td class="col-plano-terapeutico-impressao conteudo-quebravel-impressao">{{dado.plano_terapeutico}}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    
+        <p>Data de Impressão: {{ today }}</p>
+      
+        <div class="footer-print">
+            <div class="assinatura">
+                <div class="linha-assinatura"></div>
+                <div class="mt-1">
+                    Assinatura e Carimbo do Profissional
+                </div>
             </div>
         </div>
     </div>
 </div>
 {% endblock %}
-
-

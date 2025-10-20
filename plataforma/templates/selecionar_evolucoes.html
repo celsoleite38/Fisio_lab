@@ -12,41 +12,38 @@
                 </button>
             </div>
 
-            <table class="table table-bordered">
+            <table class="table table-bordered tabela-selecao-evolucao">
                 <thead class="thead-light">
                     <tr>
-                        <th>
+                        <th class="col-checkbox">
                             <input type="checkbox" id="select-all">
                         </th>
-                        <th>Data do Registro</th>
-                        <th>Titulo</th>
-                        <th>Evolução</th>
+                        <th class="col-data">Data do Registro</th>
+                        <th class="col-titulo">Titulo</th>
+                        <th class="col-evolucao">Evolução</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for evolucao in evolucoes %}
                         <tr>
-                            <td>
+                            <td class="col-checkbox">
                                 <input type="checkbox" name="evolucoes" value="{{ evolucao.id }}">
                             </td>
-                            <td>{{ evolucao.data_criacao|date:"d/m/Y" }}</td>
-                            <td>{{ evolucao.titulo }}</td>
-                            <td>{{ evolucao.evolucao}}</td>
+                            <td class="col-data">{{ evolucao.data_criacao|date:"d/m/Y" }}</td>
+                            <td class="col-titulo">{{ evolucao.titulo }}</td>
+                            <td class="col-evolucao conteudo-evolucao-tabela">{{ evolucao.evolucao}}</td>
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="3">Nenhuma evolução registrada para este paciente.</td>
+                            <td colspan="4">Nenhuma evolução registrada para este paciente.</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
-
-            
         </form>
     </div>
 
     <script>
-        // Marcar ou desmarcar todos os checkboxes
         document.addEventListener("DOMContentLoaded", function () {
             const selectAll = document.getElementById("select-all");
             const checkboxes = document.querySelectorAll('input[name="evolucoes"]');

@@ -23,106 +23,74 @@
             <h4>{{paciente.nome}}</h4>
             <h6>{{paciente.datanascimento}}</h6>
         </div>
-
     </div>
 
     <hr>
     
     <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
-        
         🧾 Adicionar dados do paciente
-
     </button>
-    
     
     <a href="{% url 'plataforma:imprimir_dados_paciente' paciente.id %}" class="btn btn-outline-success"> 
         🖨️ Imprimir Dados do Paciente
     </a>
         
+    <br>
+    <br>
+
+    <!-- Primeira tabela -->
+    <table class="table table-striped tabela-dados-paciente">
+        <thead>
+            <tr>
+                <th scope="col" class="col-data">Data</th>
+                <th scope="col" class="col-peso">Peso</th>
+                <th scope="col" class="col-qp">QP</th>
+                <th scope="col" class="col-hma">HMA</th>
+                <th scope="col" class="col-hpp">HPP</th>
+                <th scope="col" class="col-antecedentes">Antecedentes Pessoais e Familiares</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for dado in dados_paciente %}
+                <tr>
+                    <td class="col-data">{{dado.data_dadospaciente|date:"d/m/Y"}}</td>
+                    <td class="col-peso">{{dado.peso}}Kg</td>
+                    <td class="col-qp conteudo-quebravel">{{dado.qp}}</td>
+                    <td class="col-hma conteudo-quebravel">{{dado.hma}}</td>
+                    <td class="col-hpp conteudo-quebravel">{{dado.hpp}}</td>
+                    <td class="col-antecedentes conteudo-quebravel">{{dado.antecedentepf}}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
     
     <br>
-
-    <br>
-
-    <table class="table table-striped">
-
+    
+    <!-- Segunda tabela -->
+    <table class="table table-striped tabela-dados-paciente">
         <thead>
-
             <tr>
-                <th scope="col">data</th>
-                
-                <th scope="col">Peso</th>
-
-                <th scope="col">QP</th>
-
-                <th scope="col">HMA</th>
-
-                <th scope="col">HPP</th>
-
-                <th scope="col">Antecedentes Pessoais e Familiares</th>
-
+                <th scope="col" class="col-data">Data</th>
+                <th scope="col" class="col-exame-fisico">Exames físicos</th>
+                <th scope="col" class="col-exame-complementar">Exames Complementares</th>
+                <th scope="col" class="col-diagnostico">Diagnostico</th>
+                <th scope="col" class="col-plano-terapeutico">Plano Terapeutico</th>
             </tr>
-
         </thead>
-
         <tbody>
             {% for dado in dados_paciente %}
                 <tr>
-                    <th scope="row">{{dado.data_dadospaciente|date:"d/m/Y"}}</th>
-
-                    <th>{{dado.peso}}Kg</th>
-
-                    <td>{{dado.qp}}</td>
-
-                    <td>{{dado.hma}}</td>
-
-                    <td>{{dado.hpp}}</td>
-
-                    <td>{{dado.antecedentepf}}</td>
-
+                    <td class="col-data">{{dado.data_dadospaciente|date:"d/m/Y"}}</td>
+                    <td class="col-exame-fisico conteudo-quebravel">{{dado.exame_fisico}}</td>
+                    <td class="col-exame-complementar conteudo-quebravel">{{dado.exames_complementares}}</td>
+                    <td class="col-diagnostico conteudo-quebravel">{{dado.diagnostico}}</td>
+                    <td class="col-plano-terapeutico conteudo-quebravel">{{dado.plano_terapeutico}}</td>
                 </tr>
             {% endfor %}
         </tbody>
-
-    </table>
-    <br>
-    <table class="table table-striped">
-
-        <thead>
-            
-            <tr>
-                <th scope="col">data</th>
-                <th scope="col">Exames fisicos</th>
-
-                <th scope="col">Exames Complementares</th>
-
-                <th scope="col">Diagnostico</th>
-
-                <th scope="col">Plano Terapeutico</th>
-
-            </tr>
-        
-        </thead>
-
-        <tbody>
-            {% for dado in dados_paciente %}
-                <tr>
-                    <th scope="row">{{dado.data_dadospaciente|date:"d/m/Y"}}</th>
-                    
-                    <td> {{dado.exame_fisico}}  </td>
-
-                    <td> {{dado.exames_complementares}} </td>
-
-                    <td> {{dado.diagnostico}} </td>
-
-                    <td> {{dado.plano_terapeutico}} </td>
-
-                </tr>
-            {% endfor %}
-        </tbody>
-
     </table>
 
+    <!-- Modal (mantido igual) -->
     <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         
         <div class="modal-dialog" role="document">

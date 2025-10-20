@@ -11,11 +11,20 @@
         {% endfor %}
     {% endif %}
 
-<h1 class="titulo">Escolha um Paciente <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
+    <h1 class="titulo">Escolha um Paciente <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#modal">
 
-    <strong>    🧾 Novo Paciente </strong>
-</button></h1>
-
+        <strong>    🧾 Novo Paciente </strong>
+        </button></h1>
+    <form method="GET" action="{% url 'plataforma:pacientes' %}" id="search-form">
+        <div class="input-group mb-4">
+            <input type="text" name="q" class="form-control" placeholder="Buscar Paciente pelo nome..." value="{{ request.GET.q }}" id="search-input">
+            <button type="submit" class="btn btn-primary">🔍 Buscar</button>
+            {% if request.GET.q %}
+                <a href="{% url 'plataforma:pacientes' %}" class="btn btn-secondary">Limpar</a>
+            {% endif %}
+        </div>
+    </form>
+    <br>
 
 <div class="row">
     {% for paciente in pacientes %}
