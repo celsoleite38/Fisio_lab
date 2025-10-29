@@ -1,5 +1,6 @@
 .sidebar{
-    background-image: url('"/static/autenticacao/img/logo fisiominas-.png"'), linear-gradient(to bottom, #4cc099, #0babf5) ;
+    background: linear-gradient(to bottom, #4cc099, #0babf5) ;
+      
     height: 100vh;
     color: rgb(36, 28, 28);
 } 
@@ -8,6 +9,15 @@
 }
 .img_logo_sidebar{
     width: 100%;
+}
+
+.segunda_logo {
+    margin-top: 145px; /* Espaço entre as logos */
+    margin-bottom: 15px;
+    width: 320px; 
+    height: 460px;
+     margin-left: -55px; /* Move para direita */
+    margin-right: auto;
 }
 
 .area_cadastrar{
@@ -82,4 +92,9 @@
     width: 100%;             /* Ocupa largura total no celular */
     text-align: center;
   }
+}
+
+body {
+    background: linear-gradient(to right, #52bff1, #ffffffff);
+    font-family: 'Segoe UI', sans-serif;
 }
