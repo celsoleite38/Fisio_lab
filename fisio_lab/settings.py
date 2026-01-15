@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'plataforma',
     'agenda',
     'notificacoes',
+    'import_export',
     'paginas_vendas'
     
 ]

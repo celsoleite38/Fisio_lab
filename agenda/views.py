@@ -8,14 +8,11 @@ from django.contrib.auth.decorators import login_required # Para a função de c
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.views.decorators.http import require_POST # Para garantir que o cancelamento seja POST
 from datetime import datetime, timedelta
-#import requests
 import json
-
 from django.conf import settings
 from django.contrib.messages import success
 from celery import shared_task
 from django.core.mail import send_mail
-
 from django.views.generic import TemplateView
 from django.template.loader import render_to_string
 
@@ -197,12 +194,6 @@ def consultas_json(request):
             }
         })
     return JsonResponse(eventos, safe=False)
-
-
-
-
-
-
 
 class RelatorioView(LoginRequiredMixin, TemplateView):
     template_name = 'agenda/relatorio.html'
