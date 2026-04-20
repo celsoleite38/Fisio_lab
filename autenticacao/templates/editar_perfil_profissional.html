@@ -3,25 +3,96 @@
 {% block 'plataforma' %}
     {% if messages %}
         <br>
-        
         {% for message in messages %}
             <div class="alert {{message.tags}}">
                 {{message}}
             </div>
         {% endfor %}
     {% endif %}
+    
     <div class="col-md-8" style="width: 80%; margin: auto;">
         <div class="container mt-4">
-            <!-- Cabeçalho Institucional -->
-                <div class="container mt-4">
-                    <h2>Editar Perfil Profissional</h2>
-                    <form method="post" enctype="multipart/form-data"> {% csrf_token %}
-                        {{ form.as_p }}
-                        <button type="submit" class="btn btn-primary">Salvar</button>
-                        <!--<input type="submit" class="btn btn-success btn-lg" value="Salvar">-->
-                    </form>
+            <h2>Editar Perfil Profissional</h2>
+            <form method="post" enctype="multipart/form-data"> 
+                {% csrf_token %}
+                
+                <!-- Campo: Nome Completo -->
+                <div class="mb-3">
+                    <label for="{{ form.nome_completo.id_for_label }}" class="form-label">Nome Completo:</label>
+                    {{ form.nome_completo }}
+                    {% if form.nome_completo.errors %}
+                        <div class="alert alert-danger">{{ form.nome_completo.errors }}</div>
+                    {% endif %}
                 </div>
-            
+                
+                <!-- Campo: CPF -->
+                <div class="mb-3">
+                    <label for="{{ form.cpf.id_for_label }}" class="form-label">CPF:</label>
+                    {{ form.cpf }}
+                    {% if form.cpf.errors %}
+                        <div class="alert alert-danger">{{ form.cpf.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Campo: CREFITO -->
+                <div class="mb-3">
+                    <label for="{{ form.crefito.id_for_label }}" class="form-label">CREFITO:</label>
+                    {{ form.crefito }}
+                    {% if form.crefito.errors %}
+                        <div class="alert alert-danger">{{ form.crefito.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Campo: Telefone (personalizado) -->
+                <div class="mb-3">
+                    <label for="{{ form.telefone.id_for_label }}" class="form-label">Telefone:</label>
+                    {{ form.telefone }}
+                    <small class="form-text text-muted">Ex: (00) 00000-0000</small>
+                    {% if form.telefone.errors %}
+                        <div class="alert alert-danger">{{ form.telefone.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Campo: WhatsApp com checkbox dentro do LABEL -->
+                <div class="mb-3">
+                    <div class="form-check">
+                        {{ form.whatsapp }}
+                        <label class="form-check-label" for="{{ form.whatsapp.id_for_label }}">
+                            WhatsApp (marque se este número também é WhatsApp)
+                        </label>
+                        <small class="form-text text-muted d-block">Marque se este número também é WhatsApp</small>
+                    </div>
+                    {% if form.whatsapp.errors %}
+                        <div class="alert alert-danger">{{ form.whatsapp.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Campo: Nome da Clínica -->
+                <div class="mb-3">
+                    <label for="{{ form.nomeclinica.id_for_label }}" class="form-label">Nome da Clínica:</label>
+                    {{ form.nomeclinica }}
+                    {% if form.nomeclinica.errors %}
+                        <div class="alert alert-danger">{{ form.nomeclinica.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <!-- Campo: Logotipo -->
+                <div class="mb-3">
+                    <label for="{{ form.logotipo.id_for_label }}" class="form-label">Logotipo:</label>
+                    {{ form.logotipo }}
+                    {% if form.logotipo.value %}
+                        <div class="mt-2">
+                            <img src="{{ form.logotipo.value.url }}" alt="Logotipo atual" style="max-width: 200px;">
+                            <small class="form-text text-muted d-block">Logotipo atual</small>
+                        </div>
+                    {% endif %}
+                    {% if form.logotipo.errors %}
+                        <div class="alert alert-danger">{{ form.logotipo.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <button type="submit" class="btn btn-primary">Salvar</button>
+            </form>
         </div>
     </div>
 {% endblock %}

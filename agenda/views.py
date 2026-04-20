@@ -8,6 +8,9 @@ from django.contrib.auth.decorators import login_required # Para a função de c
 from django.http import JsonResponse, HttpResponseForbidden, HttpResponseBadRequest
 from django.views.decorators.http import require_POST # Para garantir que o cancelamento seja POST
 from datetime import datetime, timedelta
+import requests
+from django.conf import settings
+from autenticacao.models import PerfilProfissional
 import json
 from django.conf import settings
 from django.contrib.messages import success
@@ -43,27 +46,78 @@ class CriarAgendamentoView(LoginRequiredMixin, CreateView):
         response = super().form_valid(form)
         
         # ================================================
-        # 1. ENVIO IMEDIATO VIA WHATSAPP
+        # VALIDAÇÕES E ENVIO VIA WHATSAPP
         # ================================================
         paciente = form.instance.paciente
+        profissional = form.instance.profissional
+        
+        # Validação telefone paciente
+        validacao_paciente = self.validar_telefone(paciente.telefone)
+        if not validacao_paciente['valid']:
+            form.add_error(None, f"Telefone do paciente inválido: {validacao_paciente['error']}")
+            return self.form_invalid(form)
+        
+        # Verificar se profissional tem WhatsApp habilitado
+        try:
+            perfil_profissional = PerfilProfissional.objects.get(usuario=profissional)
+            enviar_profissional = perfil_profissional.whatsapp
+            telefone_profissional = perfil_profissional.telefone
+        except PerfilProfissional.DoesNotExist:
+            enviar_profissional = False
+            telefone_profissional = None
+        
+        if enviar_profissional:
+            validacao_profissional = self.validar_telefone(telefone_profissional)
+            if not validacao_profissional['valid']:
+                form.add_error(None, f"Telefone do profissional inválido: {validacao_profissional['error']}")
+                return self.form_invalid(form)
+        
+        # Preparar mensagem de confirmação
         data_formatada = form.instance.data_hora.strftime("%d/%m/%Y às %H:%M")
+        clinica = perfil_profissional.nomeclinica if perfil_profissional else "[Nome da Clínica]"
+        contato_emergencia = telefone_profissional if telefone_profissional else "[Telefone de Emergência]"
         
         mensagem_confirmacao = (
-            f"*📅 Confirmação de Agendamento - FisioMinas*\n\n"
+            f"*📅 Confirmação de Agendamento - {clinica}*\n\n"
             f"Olá {paciente.nome},\n\n"
             f"✅ *Consulta agendada com sucesso!*\n"
-            f"👨⚕️ Profissional: {form.instance.profissional.get_full_name()}\n"
+            f"👨⚕️ Profissional: {profissional.get_full_name()}\n"
             f"📆 Data/Hora: {data_formatada}\n"
             f"⏳ Duração: {form.instance.duracao} minutos\n\n"
-            f"📍 Local: [Endereço da Clínica]\n\n"
-            
+            f"📍 Local: [Endereço da Clínica]\n"
+            f"📞 Contato de Emergência: {contato_emergencia}\n\n"
+            f"💡 *Lembrete:* Chegue 10 minutos antes.\n"
+            f"Para confirmar ou cancelar, responda com 1 ou 2."
         )
-
-        self.enviar_whatsapp(
+        
+        # Enviar para paciente
+        resultado_paciente = self.enviar_whatsapp(
             telefone=f"55{paciente.telefone}",
             mensagem=mensagem_confirmacao
         )
-
+        if not resultado_paciente['success']:
+            form.add_error(None, "Falha ao enviar mensagem WhatsApp ao paciente")
+            return self.form_invalid(form)
+        
+        # Enviar para profissional se habilitado
+        if enviar_profissional:
+            mensagem_profissional = (
+                f"*📅 Novo Agendamento - {clinica}*\n\n"
+                f"Olá {profissional.get_full_name()},\n\n"
+                f"✅ *Novo agendamento confirmado!*\n"
+                f"👤 Paciente: {paciente.nome}\n"
+                f"📆 Data/Hora: {data_formatada}\n"
+                f"⏳ Duração: {form.instance.duracao} minutos\n\n"
+                f"📞 Telefone do paciente: {paciente.telefone}"
+            )
+            resultado_profissional = self.enviar_whatsapp(
+                telefone=f"55{telefone_profissional}",
+                mensagem=mensagem_profissional
+            )
+            if not resultado_profissional['success']:
+                form.add_error(None, "Falha ao enviar mensagem WhatsApp ao profissional")
+                return self.form_invalid(form)
+        
         # ================================================
         # 2. AGENDAMENTO DO LEMBRETE (2H ANTES)
         # ================================================
@@ -75,26 +129,43 @@ class CriarAgendamentoView(LoginRequiredMixin, CreateView):
 
         return response
 
+    def validar_telefone(self, telefone):
+        """Valida formato de telefone brasileiro"""
+        if not telefone:
+            return {'valid': False, 'error': 'Telefone não informado'}
+        telefone = telefone.strip()
+        if not telefone.isdigit():
+            return {'valid': False, 'error': 'Telefone deve conter apenas números'}
+        if len(telefone) not in [10, 11]:
+            return {'valid': False, 'error': 'Telefone deve ter 10 ou 11 dígitos'}
+        return {'valid': True, 'error': None}
+
     def enviar_whatsapp(self, telefone, mensagem):
         """Função auxiliar para envio via WhatsApp"""
-        url = f"https://graph.facebook.com/v18.0/{settings.WHATSAPP_BUSINESS_ID}/messages"
-        headers = {
-            "Authorization": f"Bearer {settings.WHATSAPP_TOKEN}",
-            "Content-Type": "application/json"
-        }
-        payload = {
-            "messaging_product": "whatsapp",
-            "to": telefone,
-            "type": "text",
-            "text": {"body": mensagem}
-        }
-
         try:
+            # Verificar se as credenciais estão configuradas
+            if not settings.WHATSAPP_BUSINESS_ID or not settings.WHATSAPP_TOKEN:
+                return {'success': False, 'error': 'WhatsApp não configurado no sistema'}
+            
+            url = f"https://graph.facebook.com/v18.0/{settings.WHATSAPP_BUSINESS_ID}/messages"
+            headers = {
+                "Authorization": f"Bearer {settings.WHATSAPP_TOKEN}",
+                "Content-Type": "application/json"
+            }
+            payload = {
+                "messaging_product": "whatsapp",
+                "to": telefone,
+                "type": "text",
+                "text": {"body": mensagem}
+            }
+
             response = requests.post(url, headers=headers, json=payload)
-            if response.status_code != 200:
-                print(f"Erro WhatsApp: {response.text}")
+            if response.status_code == 200:
+                return {'success': True, 'error': None}
+            else:
+                return {'success': False, 'error': 'Falha ao enviar mensagem'}
         except Exception as e:
-            print(f"Falha na API WhatsApp: {e}")
+            return {'success': False, 'error': 'Falha ao enviar mensagem'}
 
 # ================================================
 # TAREFA CELERY PARA LEMBRETE (RODA 24H ANTES)
@@ -105,22 +176,33 @@ def agendar_lembrete(consulta_id):
     consulta = Consulta.objects.get(id=consulta_id)
     
     if consulta.status == "confirmado":  # Só envia se estiver confirmado
+        try:
+            perfil_profissional = PerfilProfissional.objects.get(usuario=consulta.profissional)
+            clinica = perfil_profissional.nomeclinica
+            contato_emergencia = perfil_profissional.telefone if perfil_profissional.telefone else "[Telefone de Emergência]"
+        except PerfilProfissional.DoesNotExist:
+            clinica = "[Nome da Clínica]"
+            contato_emergencia = "[Telefone de Emergência]"
+        
         mensagem = (
-            f"*⏰ Lembrete de Consulta - FisioInnosoft*\n\n"
+            f"*⏰ Lembrete de Consulta - {clinica}*\n\n"
             f"Olá {consulta.paciente.nome},\n\n"
-            f"Você tem uma consulta em *24 horas*:\n"
+            f"Você tem uma consulta em *2 horas*:\n"
             f"⏰ {consulta.data_hora.strftime('%H:%M')}\n"
             f"👨⚕️ {consulta.profissional.get_full_name()}\n\n"
             f"📍 Local: [Endereço da Clínica]\n"
-            f"📞 Contato: [Telefone de Emergência]"
+            f"📞 Contato: {contato_emergencia}"
         )
         
         # Reutiliza a função de envio
-        
-        CriarAgendamentoView().enviar_whatsapp(
+        view = CriarAgendamentoView()
+        resultado = view.enviar_whatsapp(
             telefone=f"55{consulta.paciente.telefone}",
             mensagem=mensagem
         )
+        if not resultado['success']:
+            # Log error, since background
+            print(f"Erro no lembrete WhatsApp para consulta {consulta_id}: {resultado['error']}")
         
 
 class EditarConsultaView(LoginRequiredMixin, UpdateView):

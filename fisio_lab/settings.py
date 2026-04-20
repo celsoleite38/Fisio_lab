@@ -167,3 +167,7 @@ EMAIL_FAIL_SILENTLY = False
 LOGIN_URL = '/auth/logar/'
 LOGIN_REDIRECT_URL = '/plataforma/'
 LOGOUT_REDIRECT_URL = '/auth/logar/'
+
+# WhatsApp API Configuration
+WHATSAPP_BUSINESS_ID = os.environ.get('WHATSAPP_BUSINESS_ID', '')
+WHATSAPP_TOKEN = os.environ.get('WHATSAPP_TOKEN', '')

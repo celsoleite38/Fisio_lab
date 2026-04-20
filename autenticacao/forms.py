@@ -11,11 +11,13 @@ from django.conf import settings
 class PerfilProfissionalForm(forms.ModelForm):
     class Meta:
         model = PerfilProfissional
-        fields = ['nome_completo', 'cpf', 'crefito', 'nomeclinica', 'logotipo']
+        fields = ['nome_completo', 'cpf', 'crefito', 'telefone', 'whatsapp', 'nomeclinica', 'logotipo']
         widgets = {
             'nome_completo': forms.TextInput(attrs={'class': 'form-control'}),
             'cpf': forms.TextInput(attrs={'class': 'form-control'}),
             'crefito': forms.TextInput(attrs={'class': 'form-control'}),
+            'telefone': forms.TextInput(attrs={'class': 'form-control'}),
+            'whatsapp': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'nomeclinica': forms.TextInput(attrs={'class': 'form-control'}),
             'logotipo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
