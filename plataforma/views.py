@@ -1,5 +1,5 @@
 from collections import defaultdict
-from tkinter import Canvas
+#from tkinter import Canvas
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse, JsonResponse
 from django.contrib.auth.decorators import login_required

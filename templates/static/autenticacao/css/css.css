@@ -8,16 +8,21 @@
     text-align: center;
 }
 .img_logo_sidebar{
-    width: 100%;
+    width: 380px;      /* Defina aqui o tamanho fixo desejado */
+    height: auto;      /* Mantém a proporção */
+    max-width: 100%;   /* Segurança para telas muito pequenas */
+    display: block;    /* Ajuda no alinhamento */
+    margin: 10px auto;
 }
 
 .segunda_logo {
-    margin-top: 145px; /* Espaço entre as logos */
+    margin-top: 15px; /* Espaço entre as logos */
     margin-bottom: 15px;
-    width: 320px; 
-    height: 460px;
-     margin-left: -55px; /* Move para direita */
+    width: 280px; 
+    height: auto;
+    margin-left: 1px; /* Move para direita */
     margin-right: auto;
+    
 }
 
 .area_cadastrar{

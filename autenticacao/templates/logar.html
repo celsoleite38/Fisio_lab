@@ -28,10 +28,10 @@
                         {% endfor %}
                     {% endif %}
                     <h2 class="titulo">Seja Bem Vindo</h2>
-                    <p class="sub-titulo">Entre com sua conta</p>
+                    <p class="sub-titulo">Acesse sua conta</p>
                     <hr>
                     <form action="{% url 'logar' %}" method="POST">{% csrf_token %}
-                        <span class="bold">Nome de usuário</span>
+                        <span class="bold">Usuário</span>
                         <input class="form-control input-form" name="usuario" type="text" placeholder="Digite seu nome...">
                         <br>
                         <span class="bold">Senha</span>
@@ -41,9 +41,19 @@
                         <p><h3 style="position: absolute; bottom: 430px; font-weight: bold"></h3><a href="{% url 'password_reset' %}">Esqueceu a senha?</a></p>
 
                     </form>
-                    <div class="login-extra"></div>
-                        <h5 style="position: absolute; bottom: 130px; ">Não tem uma conta? <a href= "{% url 'cadastro' %}">Registre-se </a>
-                        &nbsp;|&nbsp;
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <div class="sub-titulo"></div>
+                        <h5 style="position: absolute; bottom: 130px; ">Não tem uma conta? <a href= "{% url 'cadastro' %}">Registre-se </a></button>
+                        <br>
+                        <br>
                             Reenviar email de ativação? 
                             <a href="#" data-toggle="modal" data-target="#modalReenviarAtivacao">
                                 Reenviar ativação
@@ -101,11 +111,10 @@
                         </div>
                     </form>
                 </div>
-                
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-                    <button type="submit" form="formReenviarAtivacao" class="btn btn-first">Reenviar Email</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" form="formReenviarAtivacao" class="btn btn-first">Reenviar Email</button>
+                    </div>
             </div>
         </div>
     </div>

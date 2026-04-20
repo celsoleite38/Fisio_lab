@@ -97,7 +97,7 @@ class CriarAgendamentoView(LoginRequiredMixin, CreateView):
             print(f"Falha na API WhatsApp: {e}")
 
 # ================================================
-# TAREFA CELERY PARA LEMBRETE (RODA 2H ANTES)
+# TAREFA CELERY PARA LEMBRETE (RODA 24H ANTES)
 # ================================================
 @shared_task
 def agendar_lembrete(consulta_id):
@@ -106,9 +106,9 @@ def agendar_lembrete(consulta_id):
     
     if consulta.status == "confirmado":  # Só envia se estiver confirmado
         mensagem = (
-            f"*⏰ Lembrete de Consulta - FisioMinas*\n\n"
+            f"*⏰ Lembrete de Consulta - FisioInnosoft*\n\n"
             f"Olá {consulta.paciente.nome},\n\n"
-            f"Você tem uma consulta em *2 horas*:\n"
+            f"Você tem uma consulta em *24 horas*:\n"
             f"⏰ {consulta.data_hora.strftime('%H:%M')}\n"
             f"👨⚕️ {consulta.profissional.get_full_name()}\n\n"
             f"📍 Local: [Endereço da Clínica]\n"
