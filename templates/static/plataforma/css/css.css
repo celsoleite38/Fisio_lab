@@ -121,7 +121,23 @@
     
     @page {
         size: A4;
-        margin: 2.5cm;
+        margin: 2.5cm 2cm 3.5cm 2cm; /* margem inferior maior para o rodapé */
+
+        @bottom-center {
+            content: "Página " counter(page) " de " counter(pages);
+            font-size: 8pt;
+            color: #555;
+            font-family: Arial, sans-serif;
+            padding-bottom: 3cm;
+        }
+    }
+    .evolucao-print table {
+        page-break-inside: avoid;
+    }
+
+    body {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
     }
 }
 

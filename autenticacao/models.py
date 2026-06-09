@@ -19,6 +19,7 @@ class PerfilProfissional(models.Model):
     crefito = models.CharField(max_length=20)
     nomeclinica = models.CharField(max_length=101, null=True)
     logotipo = models.ImageField(upload_to='logos_profissionais/', blank=True, null=True)
+    assinatura = models.ImageField(upload_to='assinaturas/', blank=True, null=True)
     telefone = models.CharField(max_length=20, blank=True, null=True)
     whatsapp = models.BooleanField(default=False)
 

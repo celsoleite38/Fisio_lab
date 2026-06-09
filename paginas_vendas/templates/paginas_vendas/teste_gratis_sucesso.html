@@ -1,38 +1,375 @@
 {% extends 'base_vendas.html' %}
 {% load static %}
+
 {% block 'head' %}
-    <link rel="stylesheet" href="{% static 'autenticacao/css/css.css' %}">
+    <link rel="stylesheet" href="{% static 'paginas_vendas/css/css.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #448b96, #fdfbfb);
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .area_cadastrar {
+            padding: 30px 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(255,255,255,0.05));
+            border-radius: 20px;
+        }
+
+        .card-sucesso {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            padding: 48px 40px;
+            text-align: center;
+        }
+
+        .icone-sucesso {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, #4cc099, #0babf5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 28px;
+            box-shadow: 0 4px 20px rgba(76, 192, 153, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%   { box-shadow: 0 4px 20px rgba(76, 192, 153, 0.4); }
+            50%  { box-shadow: 0 4px 36px rgba(76, 192, 153, 0.75); }
+            100% { box-shadow: 0 4px 20px rgba(76, 192, 153, 0.4); }
+        }
+
+        .icone-sucesso i {
+            font-size: 2.4rem;
+            color: #fff;
+        }
+
+        .card-sucesso h2 {
+            font-size: 1.9rem;
+            font-weight: 800;
+            color: #113523;
+            margin-bottom: 12px;
+        }
+
+        .card-sucesso p.subtitulo {
+            font-size: 1rem;
+            color: #444;
+            margin-bottom: 28px;
+        }
+
+        .validade-box {
+            background: linear-gradient(135deg, rgba(76,192,153,0.2), rgba(11,171,245,0.15));
+            border: 1px solid rgba(76, 192, 153, 0.4);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 28px;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .validade-box .label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #0a7a5a;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .validade-box .data {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #113523;
+        }
+
+        .passos {
+            background: rgba(255, 255, 255, 0.25);
+            border-radius: 14px;
+            padding: 24px;
+            margin-bottom: 32px;
+            text-align: left;
+        }
+
+        .passos h6 {
+            font-weight: 700;
+            color: #113523;
+            margin-bottom: 16px;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .passo-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .passo-item:last-child { margin-bottom: 0; }
+
+        .passo-num {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            background: linear-gradient(135deg, #4cc099, #0babf5);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .passo-texto {
+            font-size: 0.92rem;
+            color: #333;
+            padding-top: 4px;
+        }
+
+        .btn-acessar {
+            background: linear-gradient(to right, #4cc099, #0babf5);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 13px 32px;
+            transition: opacity 0.2s, transform 0.1s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-acessar:hover  { opacity: 0.88; color: #fff; }
+        .btn-acessar:active { transform: scale(0.98); }
+
+        .btn-planos {
+            border: 2px solid rgba(76, 192, 153, 0.6);
+            border-radius: 10px;
+            background: transparent;
+            color: #113523;
+            font-weight: 600;
+            font-size: 0.95rem;
+            padding: 11px 28px;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-planos:hover {
+            background: rgba(76, 192, 153, 0.15);
+            color: #113523;
+        }
+
+        .countdown {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 16px;
+        }
+
+        .countdown strong {
+            color: #0a7a5a;
+        }
+
+        .rodape-seguro {
+            font-size: 0.78rem;
+            color: #999;
+            margin-top: 28px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .col-md-9 { width: 100%; max-width: 100%; flex: 0 0 100%; }
+            .area_cadastrar { padding: 20px 15px; margin: 20px 0; }
+            .card-sucesso { padding: 32px 20px; }
+            .card-sucesso h2 { font-size: 1.5rem; }
+        }
+    </style>
 {% endblock %}
-{% block 'titulo' %}Teste Ativado - FisioLab{% endblock %}
+
+{% block 'titulo' %}Teste Ativado! | FISIO-INNOSOFT{% endblock %}
 
 {% block 'body' %}
-<div class="container-fluid">
-    <div class="row">
+<div class="container-fluid px-0">
+    <div class="row mx-0">
+
         <!-- Sidebar -->
-        <div class="col-md-3 sidebar">
-            <div class="logo_sidebar">
-                <h2 class="logo">
-                    <img class="img_logo_sidebar" src="{% static 'autenticacao/img/log FM-SF.png' %}">
-                </h2>
+        <div class="col-md-3 d-none d-md-block sidebar bg-light py-4">
+            <div class="logo_sidebar text-center mb-2">
+                <img class="img-fluid" src="{% static 'autenticacao/img/fisio_logo.png' %}" alt="Logo" style="max-height: 260px;">
             </div>
         </div>
-        
+
         <!-- Área principal -->
-        <div class="col-md-9">
-            <div class="area_cadastrar">
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle fa-2x mb-3"></i>
-                    <h2 class="titulo">Teste Ativado com Sucesso!</h2>
-                    <hr>
-                    <p class="lead">Seu acesso grátis está válido até <strong>{{ validade|date:"d/m/Y" }}</strong>.</p>
-                    <div class="mt-4">
-                        <a href="/auth/cadastro" class="btn btn-first">
-                            <i class="fas fa-arrow-right mr-2"></i> Acessar Plataforma
-                        </a>
+        <div class="col-12 col-md-9 px-0">
+
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-dark" style="background-image: linear-gradient(to right, #4cc099, #0babf5);">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="/">
+                        <img src="{% static 'autenticacao/img/fisio_logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+                        <strong>FISIO INNOSOFT</strong>
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav me-auto">
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold" href="{% url 'pagina_vendas' %}">Planos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link fw-bold" href="{% url 'recursos' %}">Recursos</a>
+                            </li>
+                        </ul>
+                        <ul class="navbar-nav">
+                            {% if user.is_authenticated %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user-circle me-1"></i> {{ user.email }}
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end">
+                                    <li><a class="dropdown-item" href="{% url 'editar_perfil' %}">Meu Perfil</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li><a class="dropdown-item text-danger" href="{% url 'sair' %}">Sair</a></li>
+                                </ul>
+                            </li>
+                            {% else %}
+                            <li class="nav-item">
+                                <a class="btn btn-outline-light ms-lg-2 mt-2 mt-lg-0" href="{% url 'logar' %}">
+                                    <i class="fas fa-sign-in-alt me-1"></i><strong>Entrar no Sistema</strong>
+                                </a>
+                            </li>
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Conteúdo -->
+            <div class="area_cadastrar my-4 mx-3 mx-md-4">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 col-lg-6">
+                        <div class="card-sucesso">
+
+                            <!-- Ícone animado -->
+                            <div class="icone-sucesso">
+                                <i class="fas fa-rocket"></i>
+                            </div>
+                            {% if usuario_novo %}
+                            <div class="aviso-box mb-4">
+                                <i class="fas fa-envelope me-2"></i>
+                                Enviamos um email para <strong>{{ request.POST.email }}</strong> com o link para
+                                <strong>ativar sua conta e criar sua senha</strong>.<br>
+                                Verifique sua caixa de entrada antes de acessar a plataforma.
+                            </div>
+                            {% else %}
+                            <div class="aviso-box mb-4">
+                                <i class="fas fa-check-circle me-2"></i>
+                                Sua conta já existe! Acesse a plataforma com seu login e senha normalmente.
+                            </div>
+                            {% endif %}
+
+                            <h2>Seu teste está ativo!</h2>
+                            <p class="subtitulo">
+                                Bem-vindo(a) ao <strong>FISIO INNOSOFT</strong>.<br>
+                                Você tem acesso completo à plataforma por <strong>7 dias</strong>.
+                            </p>
+
+                            <!-- Validade -->
+                            {% if validade %}
+                            <div class="validade-box">
+                                <div class="label">
+                                    <i class="fas fa-calendar-check me-1"></i> Seu acesso expira em
+                                </div>
+                                <div class="data">
+                                    {{ validade|date:"d \d\e F \d\e Y" }}
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Próximos passos -->
+                            <div class="passos">
+                                <h6>
+                                    <i class="fas fa-list-ol me-2 text-info"></i>Como aproveitar ao máximo
+                                </h6>
+
+                                <div class="passo-item">
+                                    <div class="passo-num">1</div>
+                                    <div class="passo-texto">
+                                        Acesse a plataforma e <strong>cadastre seus primeiros pacientes</strong>.
+                                    </div>
+                                </div>
+
+                                <div class="passo-item">
+                                    <div class="passo-num">2</div>
+                                    <div class="passo-texto">
+                                        Explore a <strong>agenda de atendimentos</strong> e as evoluções clínicas.
+                                    </div>
+                                </div>
+
+                                <div class="passo-item">
+                                    <div class="passo-num">3</div>
+                                    <div class="passo-texto">
+                                        Antes do prazo expirar, escolha um <strong>plano para continuar</strong> sem perder seus dados.
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contador regressivo -->
+                            <div class="countdown">
+                                Seu período de teste: <strong id="contador">7 dias restantes</strong>
+                            </div>
+
+                            <!-- Botões -->
+                            <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center mt-4">
+                                <a href="{% url 'logar' %}" class="btn-acessar">
+                                    <i class="fas fa-sign-in-alt me-2"></i>Acessar a plataforma
+                                </a>
+                                <a href="{% url 'pagina_vendas' %}" class="btn-planos">
+                                    <i class="fas fa-tags me-2"></i>Ver planos
+                                </a>
+                            </div>
+
+                            <div class="rodape-seguro">
+                                <i class="fas fa-shield-alt me-1"></i>
+                                Seus dados estão seguros · FISIO INNOSOFT
+                            </div>
+
+                        </div>
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
 </div>
+
+<script>
+    // Contador regressivo baseado na validade vinda do Django
+    {% if validade %}
+    (function () {
+        const validade  = new Date("{{ validade|date:'Y-m-d' }}");
+        const hoje      = new Date();
+        const diffMs    = validade - hoje;
+        const diffDias  = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+        const el        = document.getElementById('contador');
+
+        if (diffDias > 0) {
+            el.textContent = diffDias + (diffDias === 1 ? ' dia restante' : ' dias restantes');
+        } else {
+            el.textContent = 'Expirado';
+            el.style.color = '#e74c3c';
+        }
+    })();
+    {% endif %}
+</script>
 {% endblock %}

@@ -97,10 +97,9 @@
       
         <div class="footer-print">
             <div class="assinatura">
-                <div class="linha-assinatura"></div>
-                <div class="mt-1">
-                    Assinatura e Carimbo do Profissional
-                </div>
+                {% if perfil.assinatura %}
+                <img src="{{ perfil.assinatura.url }}" height="120" class="mb-2">
+                {% endif %}
             </div>
         </div>
     </div>

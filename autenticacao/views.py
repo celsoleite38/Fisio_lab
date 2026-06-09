@@ -15,11 +15,16 @@ from .forms import PerfilProfissionalForm
 from django.views.decorators.csrf import csrf_exempt
 #from django.core.mail import send_mail
 from django.views import View
+
+from .models import Ativacao  # Import do seu app de autenticação
+from paginas_vendas.models import Assinatura 
+
 def cadastro(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             return redirect('/')
         return render(request, 'cadastro.html')
+        
     elif request.method == "POST":
         username = request.POST.get('usuario')
         email = request.POST.get('email')
@@ -30,24 +35,36 @@ def cadastro(request):
             return redirect('/auth/cadastro')
         
         try:
-            user = User.objects.create_user(username=username,
-                                        password=senha,
-                                        email=email,
-                                        is_active=False)
+            # 1. Cria o usuário inativo no banco de dados
+            user = User.objects.create_user(
+                username=username,
+                password=senha,
+                email=email,
+                is_active=False
+            )
             user.save()
+            
+            Assinatura.objects.filter(email=email, usuario__isnull=True).update(usuario=user)
+                        
+            # 2. Gera o token e salva o registro de ativação
             token = sha256(f"{username}{email}".encode()).hexdigest()
             ativacao = Ativacao(token=token, user=user)
             ativacao.save()
             
+            # 3. Envia o e-mail de ativação para a sua URL da Innosoft
             path_template = os.path.join(settings.BASE_DIR, 'autenticacao/templates/emails/cadastro_confirmado.html')
             email_html(path_template, 'Cadastro confirmado', [email,], username=username, link_ativacao=f"https://fisio.innosoft.com.br/auth/ativar_conta/{token}")
+            
             messages.add_message(request, constants.SUCCESS, ' USUARIO CADASTRADO! ')
             messages.add_message(request, constants.SUCCESS, ' VERIFIQUE SEU EMAIL PARA CONFIRMAR SEU CADASTRO')
             return redirect('/auth/logar')
-        except:
+            
+        except Exception as e:
+            # Dica: printar o erro no terminal ajuda muito a debugar se algo der errado
+            print(f"Erro no cadastro: {e}") 
             messages.add_message(request, constants.ERROR, ' erro interno do sistema!!')
             return redirect('/auth/cadastro')
-
+        
 def logar(request):
     if request.method == "GET":
         if request.user.is_authenticated:

@@ -11,7 +11,7 @@ from django.conf import settings
 class PerfilProfissionalForm(forms.ModelForm):
     class Meta:
         model = PerfilProfissional
-        fields = ['nome_completo', 'cpf', 'crefito', 'telefone', 'whatsapp', 'nomeclinica', 'logotipo']
+        fields = ['nome_completo', 'cpf', 'crefito', 'telefone', 'whatsapp', 'nomeclinica', 'logotipo', 'assinatura']
         widgets = {
             'nome_completo': forms.TextInput(attrs={'class': 'form-control'}),
             'cpf': forms.TextInput(attrs={'class': 'form-control'}),
@@ -20,6 +20,7 @@ class PerfilProfissionalForm(forms.ModelForm):
             'whatsapp': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'nomeclinica': forms.TextInput(attrs={'class': 'form-control'}),
             'logotipo': forms.ClearableFileInput(attrs={'class': 'form-control'}),
+            'assinatura': forms.ClearableFileInput(attrs={'class': 'form-control'}),
         }
         
 class CustomPasswordResetForm(PasswordResetForm):

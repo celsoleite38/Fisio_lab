@@ -16,9 +16,9 @@ __pycache__/
 .idea/
 
 # Arquivos de mídia ou imagens grandes
-
 *.cdr
 
+.env
 
 # Arquivos do sistema
 .DS_Store

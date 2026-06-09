@@ -90,6 +90,19 @@
                         <div class="alert alert-danger">{{ form.logotipo.errors }}</div>
                     {% endif %}
                 </div>
+                <div class="mb-3">
+                    <label for="{{ form.assinatura.id_for_label }}" class="form-label">Assinatura:</label>
+                    {{ form.assinatura }}
+                    {% if form.assinatura.value %}
+                        <div class="mt-2">
+                            <img src="{{ form.assinatura.value.url }}" alt="Assinatura atual" style="max-width: 200px;">
+                            <small class="form-text text-muted d-block">Assinatura Digitalizada</small>
+                        </div>
+                    {% endif %}
+                    {% if form.assinatura.errors %}
+                        <div class="alert alert-danger">{{ form.assinatura.errors }}</div>
+                    {% endif %}
+                </div>
                 
                 <button type="submit" class="btn btn-primary">Salvar</button>
             </form>
