@@ -204,7 +204,7 @@ def plano_evolucao(request, id):
         messages.add_message(request, constants.ERROR, 'Esse paciente não é seu')
         return redirect('/plano_evolucao_listar/')
     
-    evolucoes = Evolucao.objects.filter(paciente=paciente).order_by("data_criacao")
+    evolucoes = Evolucao.objects.filter(paciente=paciente).order_by('-data_criacao', '-id')
 
     evolucoes_por_data = defaultdict(list)
     for evolucao in evolucoes:
@@ -214,7 +214,7 @@ def plano_evolucao(request, id):
 
     
     if request.method == "GET":
-        r1 = Evolucao.objects.filter(paciente=paciente).order_by("data_criacao")
+        r1 = Evolucao.objects.filter(paciente=paciente).order_by('-data_criacao', '-id')
         o1 = Evolucao.objects.filter(paciente=paciente).values_list('evolucao', flat=True)
         #return render(request, 'plano_evolucao.html', {'paciente': paciente, 'evolucao': r1, 'evolucao': o1})
     
@@ -328,12 +328,23 @@ def imprimir_dados_paciente(request, id):
         })
 
 # excluir evolução
+from autenticacao.models import PerfilProfissional
 from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseForbidden
 from django.contrib import messages
-from .models import Evolucao
 
 @login_required(login_url='/auth/logar/')
 def excluir_evolucao(request, pk):
+
+    perfil = get_object_or_404(
+        PerfilProfissional,
+        usuario=request.user
+    )
+
+    if not perfil.pode_excluir_evolucoes:
+        return HttpResponseForbidden(
+            "Você não possui permissão para excluir evoluções."
+        )
 
     evolucao = get_object_or_404(Evolucao, pk=pk)
 
@@ -341,6 +352,12 @@ def excluir_evolucao(request, pk):
 
     if request.method == 'POST':
         evolucao.delete()
-        messages.success(request, 'Evolução excluída com sucesso.')
+        messages.success(
+            request,
+            'Evolução excluída com sucesso.'
+        )
 
-    return redirect('plataforma:plano_evolucao', id=paciente_id)
+    return redirect(
+        'plataforma:plano_evolucao',
+        id=paciente_id
+    )

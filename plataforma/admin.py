@@ -1,9 +1,11 @@
 from django.contrib import admin
-from django.contrib.auth.models import User # Ou o seu modelo de Fisioterapeuta
+from django.contrib.auth.models import User
 from import_export import resources, fields
 from import_export.widgets import ForeignKeyWidget
 from import_export.admin import ImportExportModelAdmin
 from .models import Pacientes, DadosPaciente, Evolucao
+
+
 
 class PacientesResource(resources.ModelResource):
     # Este widget procura o fisioterapeuta pelo 'username' no banco de dados

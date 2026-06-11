@@ -55,4 +55,7 @@ class Evolucao(models.Model):
     def __str__(self):
         return self.evolucao
     
-   
+    class Meta:
+        permissions = [
+            ("pode_excluir_evolucao", "Pode excluir evoluções"),
+        ]

@@ -50,16 +50,18 @@
                 <div class="head-evolucao">
                     <span><strong>{{ev.titulo}}</strong></span>
                     <span style="float: right;">{{ev.data_criacao|date:"d/m/Y"}}
-                         <form method="POST"
+                        {% if request.user.perfilprofissional.pode_excluir_evolucoes %}
+                        <form method="POST"
                             action="{% url 'plataforma:excluir_evolucao' ev.id %}"
                             style="display:inline;">
                             {% csrf_token %}
                             <button type="submit"
-                                    class="btn btn-sm btn-danger"
-                                    onclick="return confirm('Deseja realmente excluir esta evolução?');">
+                                    class="btn btn-danger btn-sm"
+                                    onclick="return confirm('DESEJA REALMENTE EXCLUIR ESTA EVOLUÇÃO?');">
                                 🗑️
                             </button>
                         </form>
+                        {% endif %}    
 
 
 

@@ -22,6 +22,7 @@ class PerfilProfissional(models.Model):
     assinatura = models.ImageField(upload_to='assinaturas/', blank=True, null=True)
     telefone = models.CharField(max_length=20, blank=True, null=True)
     whatsapp = models.BooleanField(default=False)
+    pode_excluir_evolucoes = models.BooleanField(default=False, verbose_name='Pode excluir evoluções')
 
     def __str__(self):
         return self.nome_completo
