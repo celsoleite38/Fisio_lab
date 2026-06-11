@@ -1,4 +1,4 @@
-# 🧠 Fisio Minas
+# 🧠 Fisio Innosoft
 
 Sistema de gestão para fisioterapeutas, com foco em cadastro de pacientes, evolução de atendimentos, relatórios personalizados e integração com plataformas de pagamento.
 
