@@ -248,6 +248,7 @@ def evolucao(request, id):  #id_paciente
         
         messages.add_message(request, constants.SUCCESS, 'Evolução Cadastrada')
         return redirect('plataforma:plano_evolucao',id=id)
+    return redirect('plataforma:plano_evolucao', id=id)
 
 
 
@@ -326,3 +327,20 @@ def imprimir_dados_paciente(request, id):
             'today': date.today()
         })
 
+# excluir evolução
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib import messages
+from .models import Evolucao
+
+@login_required(login_url='/auth/logar/')
+def excluir_evolucao(request, pk):
+
+    evolucao = get_object_or_404(Evolucao, pk=pk)
+
+    paciente_id = evolucao.paciente.id
+
+    if request.method == 'POST':
+        evolucao.delete()
+        messages.success(request, 'Evolução excluída com sucesso.')
+
+    return redirect('plataforma:plano_evolucao', id=paciente_id)
