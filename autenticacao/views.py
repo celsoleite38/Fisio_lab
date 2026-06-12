@@ -1,4 +1,6 @@
 from django.shortcuts import render, redirect
+from django.utils import timezone
+from datetime import timedelta
 from django.http import HttpResponse, JsonResponse
 from .utils import password_is_valid, email_html
 from django.shortcuts import redirect, get_object_or_404
@@ -23,14 +25,21 @@ def cadastro(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             return redirect('/')
-        return render(request, 'cadastro.html')
+        email_fixo = request.session.get('email_teste')
+        return render(request, 'cadastro.html', {'email_fixo': email_fixo})
         
     elif request.method == "POST":
         username = request.POST.get('usuario')
         email = request.POST.get('email')
         senha = request.POST.get('senha')
         confirmar_senha = request.POST.get('confirmar_senha')
-        
+
+        # Se o usuário veio do fluxo de teste grátis, o e-mail é travado
+        # no valor salvo na sessão (evita burlar o campo readonly via DevTools)
+        email_teste = request.session.get('email_teste')
+        if email_teste:
+            email = email_teste
+
         if not password_is_valid(request, senha, confirmar_senha):
             return redirect('/auth/cadastro')
         
@@ -43,10 +52,24 @@ def cadastro(request):
                 is_active=False
             )
             user.save()
-            
-            Assinatura.objects.filter(email=email, usuario__isnull=True).update(usuario=user)
+
+            # 2. Se veio do fluxo de teste grátis, cria a Assinatura de teste (7 dias)
+            #    já vinculada a este usuário e ao e-mail validado
+            if email_teste:
+                Assinatura.objects.create(
+                    usuario=user,
+                    email=email,
+                    plano='teste_gratis',
+                    valor=0,
+                    validade=timezone.now() + timedelta(days=7),
+                    status='teste',
+                    eh_teste_gratis=True,
+                )
+                del request.session['email_teste']
+            else:
+                Assinatura.objects.filter(email=email, usuario__isnull=True).update(usuario=user)
                         
-            # 2. Gera o token e salva o registro de ativação
+            # 3. Gera o token e salva o registro de ativação
             token = sha256(f"{username}{email}".encode()).hexdigest()
             ativacao = Ativacao(token=token, user=user)
             ativacao.save()
@@ -68,7 +91,7 @@ def cadastro(request):
 def logar(request):
     if request.method == "GET":
         if request.user.is_authenticated:
-            return redirect('/')
+            return redirect('/plataforma/pacientes/')
         return render(request, 'logar.html')
     elif request.method == "POST":
         username = request.POST.get('usuario')

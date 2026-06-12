@@ -8,7 +8,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.utils import timezone
-from .models import Assinatura
+from .models import Assinatura, Plano
 from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 
@@ -55,12 +55,8 @@ def _criar_cobranca_asaas(customer_id, valor, descricao):
 # ──────────────────────────────────────────
 
 def pagina_vendas(request):
-    planos = [
-        {"nome": "Plano Mensal",     "duracao": "1 mês",   "preco": "R$ 29,90", "link": "pagamento/1-mes"},
-        {"nome": "Plano Trimestral", "duracao": "3 meses", "preco": "R$ 79,90", "link": "pagamento/3-meses"},
-        {"nome": "Plano Semestral",  "duracao": "6 meses", "preco": "R$ 149,90","link": "pagamento/6-meses"},
-        {"nome": "Teste Gratuito",   "duracao": "7 dias",  "preco": "Grátis",   "link": "/teste-gratis/"},
-    ]
+    todos_planos = Plano.objects.filter(ativo=True)
+    planos = [p for p in todos_planos if p.visivel]
     return render(request, 'paginas_vendas/pagina_vendas.html', {'planos': planos})
 
 
@@ -172,15 +168,15 @@ def _criar_checkout_asaas(customer_id, valor, descricao, url_sucesso, url_cancel
 
 
 def checkout(request, plano_slug):
-    planos = {
-        "1-mes":   {"title": "Plano Mensal",     "price": 29.90,  "dias": 30},
-        "3-meses": {"title": "Plano Trimestral", "price": 79.90,  "dias": 90},
-        "6-meses": {"title": "Plano Semestral",  "price": 149.90, "dias": 180},
-    }
-
-    plano = planos.get(plano_slug)
-    if not plano:
+    plano_obj = Plano.objects.filter(slug=plano_slug, ativo=True).first()
+    if not plano_obj or not plano_obj.visivel:
         return redirect('pagina_vendas')
+
+    plano = {
+        "title": plano_obj.nome,
+        "price": float(plano_obj.preco),
+        "dias": plano_obj.duracao_dias,
+    }
 
     erro = None
 

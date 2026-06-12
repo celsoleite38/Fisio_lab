@@ -212,53 +212,51 @@
             </nav>
 
             <div class="area_cadastrar my-4 mx-3 mx-md-4"> <!-- Margens responsivas -->
-                <h1 class="mb-4 text-center text-dark">Escolha seu Plano</h1>
+                <h1 class="mb-4 text-center text-dark">Escolha seu plano</h1>
 
-                <div class="row justify-content-center">
+                <div class="row justify-content-center g-3">
                     {% for plano in planos %}
-                    {% if "Grátis" in plano.preco %}
-                    <!-- Card Grátis - Ocupa toda largura em mobile -->
-                    <div class="col-12 col-lg-8 mb-4">
-                        <div class="card h-100 glass-highlight border-info">
-                            <div class="card-header bg-info text-white text-center">
-                                <h5 class="card-title mb-0">{{ plano.nome }} <i class="fas fa-star ms-2"></i></h5>
-                            </div>
-                            <div class="card-body d-flex flex-column">
-                                <p class="card-text"><i class="fas fa-calendar-alt text-info me-2"></i> Duração: {{ plano.duracao }}</p>
-                                <p class="card-text"><i class="fas fa-tag text-success me-2"></i> Preço: {{ plano.preco }}</p>
+                    <div class="col-6 col-lg-3">
+                        <div class="card h-100 glass-card {% if plano.eh_teste_gratis %}border-info border-2{% elif plano.eh_promocional %}border-warning border-2{% endif %}">
+                            <div class="card-body d-flex flex-column text-center p-3">
+                                {% if plano.eh_teste_gratis %}
+                                    <span class="badge bg-info text-white mb-2 align-self-center"><font size="5">7 dias grátis</span></font>
+                                {% elif plano.eh_promocional %}
+                                    <span class="badge bg-warning text-dark mb-2 align-self-center">Promoção</span>
+                                {% endif %}
 
-                                <div class="alert alert-light border-start border-info ps-3 mt-3 mb-4" style="font-size: 0.95rem;">
-                                    <i class="fas fa-info-circle me-2 text-info"></i>
-                                    Aproveite 7 dias gratuitos para testar todos os recursos da plataforma sem compromisso.
-                                </div>
+                                <h5 class="card-title mb-1">{{ plano.nome }}</h5>
 
-                                <div class="mt-auto">
-                                    <a href="{{ plano.link }}" class="btn btn-success w-100 py-2">
-                                        <i class="fas fa-play-circle me-2"></i> Experimentar
-                                    </a>
-                                </div>
+                                {% if plano.eh_teste_gratis %}
+                                    <p class="fs-3 fw-semibold mb-2">Grátis</p>
+                                {% else %}
+                                    <p class="fs-3 fw-semibold mb-2">R$ {{ plano.preco }}</p>
+                                {% endif %}
+
+                                <p class="card-text text-muted small mb-2">
+                                    <i class="fas fa-calendar-alt me-1"></i>{{ plano.duracao_dias }} dias de acesso
+                                </p>
+
+                                {% if plano.descricao %}
+                                <p class="card-text text-muted small flex-grow-1">
+                                    <i class="fas fa-info-circle me-1"></i>{{ plano.descricao }}
+                                </p>
+                                {% else %}
+                                <div class="flex-grow-1"></div>
+                                {% endif %}
+
+                                {% if plano.eh_teste_gratis %}
+                                <a href="{% url 'teste_gratis' %}" class="btn btn-success w-100 py-2 mt-2">
+                                    <i class="fas fa-play-circle me-2"></i>Experimentar
+                                </a>
+                                {% else %}
+                                <a href="{% url 'checkout' plano.slug %}" class="btn btn-success w-100 py-2 mt-2">
+                                    <i class="fas fa-shopping-cart me-2"></i>Assinar
+                                </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-                    {% else %}
-                    <!-- Cards Pagos - Layout responsivo -->
-                    <div class="col-12 col-sm-6 col-lg-4 mb-4">
-                        <div class="card h-100 glass-card">
-                            <div class="card-header">
-                                <h5 class="card-title mb-0">{{ plano.nome }}</h5>
-                            </div>
-                            <div class="card-body d-flex flex-column">
-                                <p class="card-text"><i class="fas fa-calendar-alt text-info me-2"></i> Duração: {{ plano.duracao }}</p>
-                                <p class="card-text"><i class="fas fa-tag text-warning me-2"></i> Preço: {{ plano.preco }}</p>
-                                <div class="mt-auto">
-                                    <a href="{{ plano.link }}" class="btn btn-success w-100 py-2">
-                                        <i class="fas fa-shopping-cart me-2"></i> Assinar
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    {% endif %}
                     {% endfor %}
                 </div>
             </div>

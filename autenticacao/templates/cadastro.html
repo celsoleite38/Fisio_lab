@@ -37,7 +37,12 @@
                         <input class="form-control input-form" name="usuario" type="text" placeholder="Digite seu nome...">
                         <br>
                         <span class="bold">E-mail</span>
-                        <input class="form-control input-form" name="email" type="text" placeholder="Digite seu E-mail...">
+                        {% if email_fixo %}
+                            <input class="form-control input-form" name="email" type="email" value="{{ email_fixo }}" readonly>
+                            <small class="text-muted">Este e-mail foi usado no teu teste grátis e não pode ser alterado.</small>
+                        {% else %}
+                            <input class="form-control input-form" name="email" type="text" placeholder="Digite seu E-mail...">
+                        {% endif %}
                         <br>
                         <div class="row">
                             <div class="col-md">

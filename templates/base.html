@@ -70,6 +70,29 @@
             </nav>
             
         {% endif %}
+
+        {% if mostrar_banner_assinatura %}
+            <div class="alert {% if assinatura_expirada %}alert-danger{% else %}alert-warning{% endif %} text-center mb-0 rounded-0" role="alert">
+                {% if assinatura_expirada %}
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    {% if eh_teste_gratis_assinatura %}
+                        Seu período de teste gratuito acabou.
+                    {% else %}
+                        Sua assinatura expirou.
+                    {% endif %}
+                    <a href="{% url 'pagina_vendas' %}" class="alert-link">Assine um plano para continuar usando o sistema.</a>
+                {% else %}
+                    <i class="fas fa-clock me-2"></i>
+                    {% if eh_teste_gratis_assinatura %}
+                        Seu teste gratuito termina em <strong>{{ dias_restantes_assinatura }} dia{{ dias_restantes_assinatura|pluralize }}</strong>.
+                    {% else %}
+                        Sua assinatura vence em <strong>{{ dias_restantes_assinatura }} dia{{ dias_restantes_assinatura|pluralize }}</strong>.
+                    {% endif %}
+                    <a href="{% url 'pagina_vendas' %}" class="alert-link">Veja os planos disponíveis.</a>
+                {% endif %}
+            </div>
+        {% endif %}
+
         {% block 'body' %}{% endblock %}
         <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" ></script>

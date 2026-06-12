@@ -17,7 +17,7 @@ urlpatterns = [
     path('plataforma/', include('plataforma.urls', namespace='plataforma')),
     path('agenda/', include('agenda.urls',namespace='agenda')),
     path('notificacoes/', include('notificacoes.urls')),
-    path('vendas', include('paginas_vendas.urls')),
+    path('vendas/', include('paginas_vendas.urls')),
 ]
 
 if settings.DEBUG:

@@ -68,7 +68,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'autenticacao.context_processors.perfil_profissional',
                 'notificacoes.context_processors.avisos_nao_lidos',
-                'paginas_vendas.context_processors.banner_teste_gratis',
+                'paginas_vendas.context_processors.banner_assinatura',
             ],
         },
     },
@@ -156,8 +156,8 @@ EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'josecelsoleite@gmail.com'
-EMAIL_HOST_PASSWORD = 'qutc nfnu jgyc ivjf'
+EMAIL_HOST_USER = 'suporteinnosoft@gmail.com'
+EMAIL_HOST_PASSWORD = 'fxqj ypxt vqws aeym'
 DEFAULT_FROM_EMAIL = 'Fisio-Innosoft <noreply@fisiominas.com.br>'
 EMAIL_FAIL_SILENTLY = False
 

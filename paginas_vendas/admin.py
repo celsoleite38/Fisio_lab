@@ -1,5 +1,54 @@
 from django.contrib import admin
-from .models import Assinatura
+from .models import Assinatura, Plano
+
+
+@admin.register(Plano)
+class PlanoAdmin(admin.ModelAdmin):
+
+    list_display = (
+        'nome',
+        'slug',
+        'preco',
+        'duracao_dias',
+        'ativo',
+        'eh_promocional',
+        'validade_promocao',
+        'ordem',
+        'visivel',
+    )
+
+    list_filter = (
+        'ativo',
+        'eh_promocional',
+        'eh_teste_gratis',
+    )
+
+    search_fields = ('nome', 'slug', 'descricao')
+
+    list_editable = ('ativo', 'ordem')
+
+    ordering = ('ordem', 'preco')
+
+    fieldsets = (
+        ('Informações do Plano', {
+            'fields': ('nome', 'slug', 'descricao', 'preco', 'duracao_dias')
+        }),
+        ('Exibição', {
+            'fields': ('ativo', 'ordem', 'eh_teste_gratis')
+        }),
+        ('Promoção', {
+            'fields': ('eh_promocional', 'validade_promocao'),
+            'description': 'Marque "eh_promocional" e defina uma data de validade para criar uma '
+                            'oferta por tempo limitado. Após a validade, o plano deixa de aparecer '
+                            'automaticamente na página de vendas. Use o campo Descrição para '
+                            'explicar as condições da promoção (ex: "válido para novos clientes, '
+                            'cobrança recorrente no valor normal após o período promocional").'
+        }),
+    )
+
+    @admin.display(boolean=True, description='Visível na página')
+    def visivel(self, obj):
+        return obj.visivel
 
 
 @admin.register(Assinatura)

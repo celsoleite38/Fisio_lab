@@ -1,6 +1,5 @@
 from django.shortcuts import redirect
 from django.utils import timezone
-from django.urls import reverse
 from .models import Assinatura
 from django.db.models import Q
 
@@ -9,11 +8,6 @@ class BloqueioAssinaturaExpiradaMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        # ⚠️ MODO DE TESTES: DESATIVADO EM PRODUÇÃO
-        # Enquanto esta linha existir, o middleware não bloqueia ninguém.
-        # QUANDO QUISER COLOCAR EM VIGOR, BASTA COMENTAR A LINHA ABAIXO:
-        return self.get_response(request)
-
         # 1. Se o usuário não está logado, deixa navegar pelas páginas públicas
         if not request.user.is_authenticated:
             return self.get_response(request)
@@ -25,7 +19,7 @@ class BloqueioAssinaturaExpiradaMiddleware:
         # 3. Lista de caminhos/URLs permitidas
         # CORREÇÃO: Removi o '/admin/' daqui para que ele também seja bloqueado no futuro
         urls_permitidas = [
-            reverse('pagina_vendas'),             # Sua view de planos
+            '/vendas/',                            # Página de planos, checkout, teste-grátis
             '/auth/',                             # URLs de login/logout
             '/static/',                           # CSS/JS da página de planos
             '/media/',                            # Imagens
