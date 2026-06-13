@@ -23,10 +23,18 @@ def pacientes(request):
         
         if query:
             pacientes = pacientes.filter(nome__icontains=query)
-                    
+
+        ordem = request.GET.get('ordem', 'alfabetica')
+        if ordem == 'cadastro':
+            pacientes = pacientes.order_by('id')
+        else:
+            ordem = 'alfabetica'
+            pacientes = pacientes.order_by('nome')
+
         return render(request, 'pacientes.html', {
             'pacientes': pacientes,
-            'query': query
+            'query': query,
+            'ordem': ordem,
         })
         
     
@@ -88,10 +96,18 @@ def dados_paciente_listar(request):
         query = request.GET.get('q')
         if query:
             pacientes = pacientes.filter(nome__icontains=query)
-        
+
+        ordem = request.GET.get('ordem', 'alfabetica')
+        if ordem == 'cadastro':
+            pacientes = pacientes.order_by('id')
+        else:
+            ordem = 'alfabetica'
+            pacientes = pacientes.order_by('nome')
+
         return render(request, 'dados_paciente_listar.html', {
             'pacientes': pacientes,
-            'query': query
+            'query': query,
+            'ordem': ordem,
         })
         
     
@@ -190,10 +206,18 @@ def plano_evolucao_listar (request):
         query = request.GET.get('q')
         if query:
             pacientes = pacientes.filter(nome__icontains=query)
-        
+
+        ordem = request.GET.get('ordem', 'alfabetica')
+        if ordem == 'cadastro':
+            pacientes = pacientes.order_by('id')
+        else:
+            ordem = 'alfabetica'
+            pacientes = pacientes.order_by('nome')
+
         return render(request, 'plano_evolucao_listar.html', {
             'pacientes': pacientes,
-            'query': query
+            'query': query,
+            'ordem': ordem,
         })
         
     

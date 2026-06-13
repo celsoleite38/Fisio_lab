@@ -16,7 +16,7 @@
         <strong>    🧾 Novo Paciente </strong>
         </button></h1>
     <form method="GET" action="{% url 'plataforma:pacientes' %}" id="search-form">
-        <div class="input-group mb-4">
+        <div class="input-group mb-2">
             <input type="text" name="q" class="form-control" placeholder="Buscar Paciente pelo nome..." value="{{ request.GET.q }}" id="search-input">
             <button type="submit" class="btn btn-primary">🔍 Buscar</button>
             {% if request.GET.q %}
@@ -24,6 +24,14 @@
             {% endif %}
         </div>
     </form>
+    <div class="mb-4 d-flex align-items-center gap-2">
+        <small class="text-muted">Ordenar por &nbsp&nbsp&nbsp  </small>
+        <div class="btn-group btn-group-sm" role="group">
+            <a href="?ordem=alfabetica{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}"
+               class="btn {% if ordem == 'cadastro' %}btn-outline-secondary{% else %}btn-primary{% endif %}">Nome (A-Z)</a>
+            
+        </div>
+    </div>
     <br>
 
 <div class="row">
@@ -176,6 +184,3 @@
     
 
 {% endblock %}
-
-
-

@@ -4,8 +4,12 @@
 {% block 'body' %}
 <div class="container mt-4">
     <!-- Cabeçalho Institucional -->
-    <div class="border-bottom pb-3 mb-4">
-        <h3 class="text-center">{{perfil.nomeclinica}} - Evolução</h3>
+    <div class=" pb-3 mb-4">
+        <h3 class="text-center"><font style="color: #00007d;"><strong>{{perfil.nomeclinica}}<br> EVOLUÇÃO</strong></font></h3>
+        <div>
+          
+            </div>
+        <div style="height: 3px; background: linear-gradient(to right, #4cc099, #0babf5, transparent); width: 100%; margin-bottom: 2px; border-radius: 2px;"></div>
         <div class="d-flex justify-content-between">
             <div>
                 <strong>Paciente:</strong> {{ paciente.nome }}<br>
@@ -21,10 +25,11 @@
                 </div>
             </div>
             {% if perfil.logotipo %}
-            <img src="{{ perfil.logotipo.url }}" height="80" class="mb-2">
+            <img src="{{ perfil.logotipo.url }}" height="100" class="mb-2">
             {% endif %}
             {% endif %}
         </div>
+        
     </div>
 
     <!-- Botão de imprimir -->

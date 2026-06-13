@@ -44,7 +44,7 @@ def banner_assinatura(request):
     # +1 garante que, faltando 1 dia e poucas horas, mostre "2 dias"
     dias_restantes = diferenca.days + 1
 
-    if dias_restantes <= 3:
+    if dias_restantes <= 5:
         return {
             'mostrar_banner_assinatura': True,
             'dias_restantes_assinatura': dias_restantes,
