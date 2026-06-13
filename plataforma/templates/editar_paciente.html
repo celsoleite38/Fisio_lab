@@ -26,8 +26,16 @@
             </div>
         </div>
         <div style="height: 3px; background: linear-gradient(to right, #4cc099, #0babf5, transparent); width: 100%; margin-bottom: 15px; border-radius: 2px;"></div>
+        <div class="text-muted small mt-1">
+            <strong>Fisioterapeuta:</strong> {{ perfil.nome_completo }}&nbsp
+            <strong>CREFITO:</strong> {{ perfil.crefito }}&nbsp
+            <strong>CPF:</strong> {{ perfil.cpf }}
+        </div>
     </div>
 </div>
+    <div class="mb-3">
+                
+           
     <div class="col-md-10" style="margin: auto;">
         <form action="/plataforma/editar_paciente/{{ paciente.id }}/" method="POST"> {% csrf_token %}
 
@@ -101,8 +109,8 @@
             <hr class="mb-4">
 
             <div class="d-flex gap-2 mb-4">
-                <button type="submit" class="btn btn-primary btn-lg">💾 Salvar Alterações</button> &nbsp
-                <button type="button" class="btn btn-success btn-lg no-print" onclick="window.print()">🖨️ Imprimir Ficha Atualizada</button>
+                <button type="submit" class="btn btn-primary btn-lg">💾 Salvar</button> &nbsp
+                <button type="button" class="btn btn-success btn-lg no-print" onclick="window.print()">🖨️ Imprimir</button>
             </div>
         </form>
     
