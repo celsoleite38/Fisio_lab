@@ -37,6 +37,22 @@
                 white-space: nowrap;
             }
         }
+        
+        .link-lateral, .link-lateral:hover, .link-lateral:focus {
+            text-decoration: none !important; /* Remove o sublinhado */
+            color: inherit !important;           /* Mantém a cor original do seu texto */
+        }
+        .card-lateral {
+            transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        }
+
+        /* Efeito ao passar o mouse (Hover) */
+        .link-lateral:hover .card-lateral {
+            transform: translateY(-3px); /* Faz o botão subir de leve */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3) !important; /* Deixa a sombra mais marcante */
+            filter: brightness(1.05); /* Dá um leve ganho de brilho no degradê */
+        }
+    
     </style>
 {% endblock %}
 

@@ -32,15 +32,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'autenticacao',
     'plataforma',
     'agenda',
     'notificacoes',
     'import_export',
     'paginas_vendas',
-    
-    
 ]
+
+SITE_ID = 1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
