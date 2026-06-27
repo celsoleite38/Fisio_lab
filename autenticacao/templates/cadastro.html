@@ -48,10 +48,12 @@
                             <div class="col-md">
                             <span class="bold">Senha</span>
                             <input class="form-control input-form" name="senha" type="password" placeholder="Digite sua senha...">
+                            <small class="text-muted">{{ form.new_password1.help_text|safe }}</small>
                         </div>
                         <div class="col-md">
                             <span class="bold">Confirmar senha</span>
                             <input class="form-control input-form" name="confirmar_senha" type="password" placeholder="Confirme sua senha">
+                            <small class="text-muted">Repita a senha informada igual ao campo acima</small>
                         </div>
                     </div>
                     <br>

@@ -23,8 +23,7 @@ def password_is_valid(request, password, confirm_password):
         messages.add_message(request, constants.ERROR, 'Sua senha não contém números')
         return False
     return True
-    if not password_is_valid(request, senha, confirmar_senha):
-        return redirect('/auth/cadastro')
+    
     
     
 

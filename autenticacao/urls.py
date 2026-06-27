@@ -3,6 +3,7 @@ from . import views
 from django.contrib.auth import views as auth_views
 from .views import ReenviarAtivacaoView
 from .forms import CustomPasswordResetForm
+from .forms import FormRedefinirSenhaCustom
 
 urlpatterns = [
     path('cadastro/', views.cadastro, name="cadastro"),
@@ -19,7 +20,7 @@ urlpatterns = [
          ), 
          name='password_reset'),
     path('recuperar-senha/enviado/', auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'), name='password_reset_done'),
-    path('recuperar-senha/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'), name='password_reset_confirm'),
+    path('recuperar-senha/<uidb64>/<token>/', auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html', form_class=FormRedefinirSenhaCustom), name='password_reset_confirm'),
     path('recuperar-senha/concluido/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
     path('perfil/', views.editar_perfil_profissional, name='editar_perfil'),
     path('reenviar-ativacao/', ReenviarAtivacaoView.as_view(), name='reenviar_ativacao'),

@@ -34,27 +34,31 @@ def cadastro(request):
         senha = request.POST.get('senha')
         confirmar_senha = request.POST.get('confirmar_senha')
 
-        # Se o usuário veio do fluxo de teste grátis, o e-mail é travado
-        # no valor salvo na sessão (evita burlar o campo readonly via DevTools)
         email_teste = request.session.get('email_teste')
         if email_teste:
             email = email_teste
 
         if not password_is_valid(request, senha, confirmar_senha):
             return redirect('/auth/cadastro')
-        
+
+        # ── Verificações ANTES de gravar no banco ──────────────────────────
+        if User.objects.filter(username=username).exists():
+            messages.add_message(request, constants.ERROR, 'Este nome de usuário já está em uso.')
+            return redirect('/auth/cadastro')
+
+        if User.objects.filter(email=email).exists():
+            messages.add_message(request, constants.ERROR, 'Este e-mail já está cadastrado.')
+            return redirect('/auth/cadastro')
+        # ───────────────────────────────────────────────────────────────────
+
         try:
-            # 1. Cria o usuário inativo no banco de dados
             user = User.objects.create_user(
                 username=username,
                 password=senha,
                 email=email,
                 is_active=False
             )
-            user.save()
 
-            # 2. Se veio do fluxo de teste grátis, cria a Assinatura de teste (7 dias)
-            #    já vinculada a este usuário e ao e-mail validado
             if email_teste:
                 Assinatura.objects.create(
                     usuario=user,
@@ -68,25 +72,30 @@ def cadastro(request):
                 del request.session['email_teste']
             else:
                 Assinatura.objects.filter(email=email, usuario__isnull=True).update(usuario=user)
-                        
-            # 3. Gera o token e salva o registro de ativação
+
             token = sha256(f"{username}{email}".encode()).hexdigest()
-            ativacao = Ativacao(token=token, user=user)
-            ativacao.save()
-            
-            # 3. Envia o e-mail de ativação para a sua URL da Innosoft
-            path_template = os.path.join(settings.BASE_DIR, 'autenticacao/templates/emails/cadastro_confirmado.html')
-            email_html(path_template, 'Cadastro confirmado', [email,], username=username, link_ativacao=f"https://fisio.innosoft.com.br/auth/ativar_conta/{token}")
-            
-            messages.add_message(request, constants.SUCCESS, ' USUARIO CADASTRADO! ')
-            messages.add_message(request, constants.SUCCESS, ' VERIFIQUE SEU EMAIL PARA CONFIRMAR SEU CADASTRO')
-            return redirect('/auth/logar')
-            
+            Ativacao(token=token, user=user).save()
+
         except Exception as e:
-            # Dica: printar o erro no terminal ajuda muito a debugar se algo der errado
-            print(f"Erro no cadastro: {e}") 
-            messages.add_message(request, constants.ERROR, ' erro interno do sistema!!')
+            print(f"Erro ao criar usuário: {e}")
+            messages.add_message(request, constants.ERROR, 'Erro interno ao criar conta. Tente novamente.')
             return redirect('/auth/cadastro')
+
+        # ── E-mail tratado FORA do bloco que cria o usuário ───────────────
+        try:
+            path_template = os.path.join(settings.BASE_DIR, 'autenticacao/templates/emails/cadastro_confirmado.html')
+            email_html(path_template, 'Cadastro confirmado', [email], username=username,
+                       link_ativacao=f"https://fisio.innosoft.com.br/auth/ativar_conta/{token}")
+        except Exception as e:
+            print(f"Erro ao enviar e-mail de ativação: {e}")
+            # Usuário foi criado com sucesso; avisa mas não bloqueia o fluxo
+            messages.add_message(request, constants.WARNING,
+                'Conta criada! Porém houve um problema ao enviar o e-mail de ativação. '
+                'Use a opção "Reenviar ativação" na tela de login.')
+
+        messages.add_message(request, constants.SUCCESS, 'Usuário cadastrado!')
+        messages.add_message(request, constants.SUCCESS, 'Verifique seu e-mail para confirmar seu cadastro.')
+        return redirect('/auth/logar')
         
 def logar(request):
     if request.method == "GET":

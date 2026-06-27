@@ -1,12 +1,15 @@
 from django import forms
 from .models import PerfilProfissional
-from django.contrib.auth.forms import PasswordResetForm
+from django.contrib.auth.forms import PasswordResetForm, SetPasswordForm
 from django.contrib.auth.tokens import default_token_generator
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.template.loader import render_to_string
 from django.core.mail import EmailMultiAlternatives
 from django.conf import settings
+
+
+
 
 class PerfilProfissionalForm(forms.ModelForm):
     class Meta:
@@ -43,3 +46,14 @@ class CustomPasswordResetForm(PasswordResetForm):
         )
         email.content_subtype = "html"  # Define como HTML
         email.send()
+
+
+
+class FormRedefinirSenhaCustom(SetPasswordForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Aqui você escreve EXATAMENTE o texto que quer que apareça na tela
+        self.fields['new_password1'].help_text = (
+            "A senha deve conter pelo menos 8 caracteres, sendo pelo menos 1 maiúscula e  números, e não ser muito óbvia."
+        )
