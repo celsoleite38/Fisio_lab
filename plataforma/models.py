@@ -22,7 +22,7 @@ class Pacientes(models.Model):
     profissao = models.CharField(max_length=50)
     email = models.EmailField()
     telefone = models.CharField(max_length=25)
-    endereco = models.CharField(max_length=50)
+    endereco = models.CharField(max_length=255)
     fisio = models.ForeignKey(User, on_delete=models.CASCADE)
                                                     #pode ser usar SET_NULL para quando apagar o fisio nao apague os pacientes dele
     def __str__(self):
@@ -32,14 +32,14 @@ class DadosPaciente(models.Model):
     paciente = models.ForeignKey(Pacientes, on_delete=models.CASCADE)
     #data = models.DateField()
     peso = models.IntegerField()
-    qp = models.CharField(max_length=200)
-    hma = models.CharField(max_length=200)
-    hpp = models.CharField(max_length=200)
-    antecedentepf = models.CharField(max_length=200)
-    exame_fisico = models.CharField(max_length=200)
-    exames_complementares = models.CharField(max_length=200)
-    diagnostico = models.CharField(max_length=200)
-    plano_terapeutico = models.CharField(max_length=200)
+    qp = models.CharField(max_length=500)
+    hma = models.CharField(max_length=500)
+    hpp = models.CharField(max_length=500)
+    antecedentepf = models.CharField(max_length=500)
+    exame_fisico = models.CharField(max_length=500)
+    exames_complementares = models.CharField(max_length=500)
+    diagnostico = models.CharField(max_length=500)
+    plano_terapeutico = models.CharField(max_length=500)
     data_dadospaciente = models.DateField()
         
     def __str__(self):
