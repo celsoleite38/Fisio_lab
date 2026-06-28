@@ -138,17 +138,90 @@ def ativar_conta(request, token):
 
 @login_required
 def editar_perfil_profissional(request):
+    from hashlib import sha256
+    from .models import AlteracaoEmail
+
     perfil, _ = PerfilProfissional.objects.get_or_create(usuario=request.user)
 
     if request.method == 'POST':
         form = PerfilProfissionalForm(request.POST, request.FILES, instance=perfil)
+        novo_email = request.POST.get('novo_email', '').strip()
+
         if form.is_valid():
             form.save()
-            return redirect('plataforma:pacientes')  # ou qualquer outra página
+
+            # Troca de e-mail solicitada?
+            if novo_email and novo_email != request.user.email:
+
+                if User.objects.filter(email=novo_email).exclude(pk=request.user.pk).exists():
+                    messages.add_message(request, constants.ERROR,
+                        'Este e-mail já está em uso por outra conta.')
+                    return redirect('editar_perfil')
+
+                # Cria/atualiza o pedido pendente
+                token = sha256(f"{request.user.username}{novo_email}".encode()).hexdigest()
+                AlteracaoEmail.objects.update_or_create(
+                    usuario=request.user,
+                    defaults={'novo_email': novo_email, 'token': token}
+                )
+
+                # Envia e-mail de confirmação
+                try:
+                    path_template = os.path.join(
+                        settings.BASE_DIR,
+                        'autenticacao/templates/emails/confirmar_email.html'
+                    )
+                    link = f"https://fisio.innosoft.com.br/auth/confirmar_email/{token}/"
+                    email_html(path_template, 'Confirme seu novo e-mail', [novo_email],
+                               username=request.user.username, link_confirmacao=link)
+                    messages.add_message(request, constants.SUCCESS,
+                        f'Enviamos um e-mail de confirmação para {novo_email}. '
+                        'O e-mail só será alterado após você clicar no link.')
+                except Exception as e:
+                    print(f"Erro ao enviar e-mail de troca: {e}")
+                    messages.add_message(request, constants.WARNING,
+                        'Perfil salvo, mas houve erro ao enviar o e-mail de confirmação. Tente novamente.')
+            else:
+                messages.add_message(request, constants.SUCCESS, 'Perfil atualizado com sucesso!')
+
+            return redirect('editar_perfil')
     else:
         form = PerfilProfissionalForm(instance=perfil)
 
-    return render(request, 'editar_perfil_profissional.html', {'form': form})
+    # Verifica se há troca de e-mail pendente
+    email_pendente = None
+    try:
+        email_pendente = request.user.alteracao_email.novo_email
+    except Exception:
+        pass
+
+    return render(request, 'editar_perfil_profissional.html', {
+        'form': form,
+        'email_pendente': email_pendente,
+    })
+
+
+@login_required
+def confirmar_troca_email(request, token):
+    from .models import AlteracaoEmail
+    try:
+        alteracao = AlteracaoEmail.objects.get(token=token, usuario=request.user)
+    except AlteracaoEmail.DoesNotExist:
+        # Token inválido ou de outro usuário
+        try:
+            alteracao = AlteracaoEmail.objects.get(token=token)
+        except AlteracaoEmail.DoesNotExist:
+            messages.add_message(request, constants.ERROR, 'Link inválido ou expirado.')
+            return redirect('editar_perfil')
+
+    user = alteracao.usuario
+    user.email = alteracao.novo_email
+    user.save()
+    alteracao.delete()
+
+    messages.add_message(request, constants.SUCCESS,
+        f'E-mail alterado com sucesso para {user.email}!')
+    return redirect('editar_perfil')
 
 
 

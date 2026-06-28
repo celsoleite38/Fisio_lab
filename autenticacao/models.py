@@ -26,3 +26,13 @@ class PerfilProfissional(models.Model):
 
     def __str__(self):
         return self.nome_completo
+
+
+class AlteracaoEmail(models.Model):
+    usuario = models.OneToOneField(User, on_delete=models.CASCADE, related_name='alteracao_email')
+    novo_email = models.EmailField()
+    token = models.CharField(max_length=64, unique=True)
+    criado_em = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.usuario.username} → {self.novo_email}"

@@ -16,6 +16,61 @@
             <form method="post" enctype="multipart/form-data"> 
                 {% csrf_token %}
                 
+                
+                <!-- Campo: Nome de usuário (somente leitura) -->
+                <div class="mb-3">
+                    <label class="form-label">Nome de Usuário:</label>
+                    <input type="text" class="form-control" value="{{ request.user.username }}" disabled>
+                    <small class="form-text text-muted">O nome de usuário não pode ser alterado.</small>
+                </div>
+
+                <!-- Campo: E-mail atual + link para modal -->
+                <!-- Campo: E-mail atual + link para modal -->
+                <div class="mb-3">
+                    <label class="form-label">E-mail:</label>
+                    <div class="d-flex align-items-center gap-2">
+                        <input type="text" class="form-control" value="{{ request.user.email }}" disabled>
+                        <a href="#" data-toggle="modal" data-target="#modalTrocarEmail"
+                        class="text-nowrap small ml-2">Trocar e-mail</a>
+                    </div>
+                    {% if email_pendente %}
+                        <div class="alert alert-warning mt-1 py-1">
+                            ⏳ Aguardando confirmação para: <strong>{{ email_pendente }}</strong>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Modal Trocar E-mail -->
+                <div class="modal fade" id="modalTrocarEmail" tabindex="-1" role="dialog" aria-labelledby="modalTrocarEmailLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="modalTrocarEmailLabel">Trocar E-mail</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label class="form-label">E-mail atual:</label>
+                                    <input type="text" class="form-control" value="{{ request.user.email }}" disabled>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="novo_email" class="form-label">Novo e-mail:</label>
+                                    <input type="email" name="novo_email" id="novo_email"
+                                        class="form-control" placeholder="Digite o novo e-mail">
+                                    <small class="form-text text-muted">
+                                        Um link de confirmação será enviado para o novo endereço.
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                                <button type="submit" class="btn btn-primary">Enviar confirmação</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- Campo: Nome Completo -->
                 <div class="mb-3">
                     <label for="{{ form.nome_completo.id_for_label }}" class="form-label">Nome Completo:</label>

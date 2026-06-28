@@ -11,7 +11,7 @@ urlpatterns = [
     path('sair/', views.sair, name="sair"),
     #recupera senha
     path('ativar_conta/<str:token>/', views.ativar_conta, name="ativar_conta"),
-     path('recuperar-senha/', 
+    path('recuperar-senha/', 
          auth_views.PasswordResetView.as_view(
              template_name='registration/password_reset_form.html',
              form_class=CustomPasswordResetForm,  # Form personalizado
@@ -24,6 +24,6 @@ urlpatterns = [
     path('recuperar-senha/concluido/', auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'), name='password_reset_complete'),
     path('perfil/', views.editar_perfil_profissional, name='editar_perfil'),
     path('reenviar-ativacao/', ReenviarAtivacaoView.as_view(), name='reenviar_ativacao'),
-    
+    path('confirmar_email/<str:token>/', views.confirmar_troca_email, name='confirmar_troca_email'),
 
 ]
